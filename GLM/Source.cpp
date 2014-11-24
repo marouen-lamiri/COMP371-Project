@@ -368,14 +368,19 @@ void renderScene(void) {
 	
 
 	glTranslatef(0, 4, 0);
-	//2 another way of calling loader
-	glmDraw(mymodel2, GLM_SMOOTH);
+	
 
 	glutSwapBuffers();
 }
 
-void init()
+void init(int argc, char **argv)
 {
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+	glutInitWindowPosition(100, 100);
+	glutInitWindowSize(800, 600);
+	glutCreateWindow("Project");
+
 	glEnable(GL_TEXTURE_2D);
 	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
 	glEnable(GL_DEPTH_TEST);
@@ -384,7 +389,7 @@ void init()
 	glEnable(GL_COLOR_MATERIAL);
 
 	//Load model
-	mymodel1 = glmReadOBJ("models/cube.obj");
+	mymodel1 = glmReadOBJ("3dFalconFINAL.obj");
 
 	//There are for preparing our model
 	glmUnitize(mymodel1);
@@ -393,34 +398,27 @@ void init()
 
 	displayList=glGenLists(1);
 	glNewList(displayList,GL_COMPILE);
-		glmDraw(mymodel1, GLM_SMOOTH | GLM_MATERIAL | GLM_TEXTURE);
+	glmDraw(mymodel1, GLM_SMOOTH | GLM_MATERIAL | GLM_TEXTURE);
 	glEndList();
 
-	//Loads corrposnding texture
-	Image* image = loadBMP("models/rock.bmp");
-	texture1 = loadTexture(image);
-	delete image;
+	//Loads corresponding texture
+	//Image* image = loadBMP("models/rock.bmp");
+	//texture1 = loadTexture(image);
+	//delete image;
 
-	mymodel2 = glmReadOBJ("models/f16.obj");
-	glmUnitize(mymodel2);
-	glmFacetNormals(mymodel2);
-	glmVertexNormals(mymodel2, 90);
 }
 
 int main(int argc, char **argv) {
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-	glutInitWindowPosition(100,100);
-	glutInitWindowSize(800,600);
-	glutCreateWindow("Project");
+	init(argc, argv);
+	
 	
 	// por registo de funcoes aqui
 	glutDisplayFunc(renderScene);
 	glutKeyboardFunc(keyboard);
-	glutIdleFunc(renderScene);
+	//glutIdleFunc(renderScene);
 	glutReshapeFunc(changeSize);
 	
-	init();
+	
 	
 	glutMainLoop();
 	

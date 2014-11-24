@@ -1,0 +1,257 @@
+# Blender MTL File: 'None'
+# Material Count: 26
+
+newmtl CP_Front
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.338824 0.338824 0.354510
+Ks 0.164706 0.164706 0.164706
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Users\Derek\Millenium falcon\Assets\Falcon\CP_Front.jpg
+
+newmtl Cockpit2
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.341961 0.338824 0.357647
+Ks 0.164706 0.164706 0.164706
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Users\Derek\Millenium falcon\Assets\Falcon\Cockpit2.jpg
+
+newmtl Cockpit3
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.398431 0.389020 0.407843
+Ks 0.164706 0.164706 0.164706
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Users\Derek\Millenium falcon\Assets\Falcon\Cockpit3.jpg
+
+newmtl Dish01
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.395294 0.392157 0.398431
+Ks 0.164706 0.164706 0.164706
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Users\Derek\Millenium falcon\Assets\Falcon\Dish01.jpg
+
+newmtl Dish02
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.407843 0.404706 0.423529
+Ks 0.164706 0.164706 0.164706
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Users\Derek\Millenium falcon\Assets\Falcon\Dish02.jpg
+
+newmtl DishSide
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.219608 0.222745 0.225882
+Ks 0.164706 0.164706 0.164706
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Users\Derek\Millenium falcon\Assets\Falcon\DishSide.jpg
+
+newmtl DrivBack
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.310588 0.294902 0.316863
+Ks 0.164706 0.164706 0.164706
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Users\Derek\Millenium falcon\Assets\Falcon\DrivBack.jpg
+
+newmtl Engine01
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.272941 0.266667 0.282353
+Ks 0.164706 0.164706 0.164706
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Users\Derek\Millenium falcon\Assets\Falcon\Engine01.jpg
+
+newmtl Engine02
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.734118 0.762353 0.790588
+Ks 0.164706 0.164706 0.164706
+Ni 1.000000
+d 0.800000
+illum 2
+map_Kd F:\Users\Derek\Millenium falcon\Assets\Falcon\Engine02.jpg
+
+newmtl EscPod_L
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.379608 0.376471 0.389020
+Ks 0.164706 0.164706 0.164706
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Users\Derek\Millenium falcon\Assets\Falcon\EscPod_L.jpg
+
+newmtl EscPod_U
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.370196 0.363922 0.389020
+Ks 0.164706 0.164706 0.164706
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Users\Derek\Millenium falcon\Assets\Falcon\EscPod_U.jpg
+
+newmtl FalcPlan
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.454902 0.448627 0.467451
+Ks 0.164706 0.164706 0.164706
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Users\Derek\Millenium falcon\Assets\Falcon\FalcPlan.jpg
+
+newmtl FalcUndr
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.470588 0.458039 0.476863
+Ks 0.164706 0.164706 0.164706
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Users\Derek\Millenium falcon\Assets\Falcon\FalcUndr.jpg
+
+newmtl Foregrou
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.250980 0.250980 0.250980
+Ks 0.164706 0.164706 0.164706
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl FrontCol
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.164706 0.164706 0.164706
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl Hatch
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.241569 0.238431 0.241569
+Ks 0.164706 0.164706 0.164706
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Users\Derek\Millenium falcon\Assets\Falcon\Hatch.jpg
+
+newmtl M_Inside
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.436078 0.429804 0.448627
+Ks 0.164706 0.164706 0.164706
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl MandbEnd
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.210196 0.197647 0.197647
+Ks 0.164706 0.164706 0.164706
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl PodSide1
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.316863 0.307451 0.335686
+Ks 0.164706 0.164706 0.164706
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Users\Derek\Millenium falcon\Assets\Falcon\PodSide1.jpg
+
+newmtl SidePort
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.266667 0.269804 0.272941
+Ks 0.164706 0.164706 0.164706
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Users\Derek\Millenium falcon\Assets\Falcon\SidePort.jpg
+
+newmtl SideRe01
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.379608 0.370196 0.379608
+Ks 0.164706 0.164706 0.164706
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Users\Derek\Millenium falcon\Assets\Falcon\SideRe01.jpg
+
+newmtl SideRear
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.379608 0.370196 0.379608
+Ks 0.164706 0.164706 0.164706
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Users\Derek\Millenium falcon\Assets\Falcon\SideRear.jpg
+
+newmtl Turret_L
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.448627 0.436078 0.451765
+Ks 0.164706 0.164706 0.164706
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Users\Derek\Millenium falcon\Assets\Falcon\Turret_L.jpg
+
+newmtl Turret_U
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.429804 0.417255 0.439216
+Ks 0.164706 0.164706 0.164706
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Users\Derek\Millenium falcon\Assets\Falcon\Turret_U.jpg
+
+newmtl Vent01
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.200784 0.197647 0.210196
+Ks 0.164706 0.164706 0.164706
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Users\Derek\Millenium falcon\Assets\Falcon\Vent01.jpg
+
+newmtl _Charcoa
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.109804 0.109804 0.109804
+Ks 0.164706 0.164706 0.164706
+Ni 1.000000
+d 1.000000
+illum 2
