@@ -95,8 +95,8 @@ void drawAxes()
 
 void motionBlur(){
 	if(displayMotionBlur){
-		glAccum(GL_MULT, 0.95);
-		glAccum(GL_ACCUM, 1-0.95);
+		glAccum(GL_MULT, 0.2);
+		glAccum(GL_ACCUM, 1-0.2);
 		glAccum(GL_RETURN, 1.0);
 		glFlush();
 	}
@@ -106,7 +106,7 @@ void fog(){
 	if(displayFog){
 		glEnable(GL_FOG);
 		{
-			GLfloat fogColor[4] = {1, 0.5, 0.5, 0.5};
+			GLfloat fogColor[4] = {0.894, 0.678, 0.525, 0.5};
 			glFogi (GL_FOG_MODE, GL_LINEAR);
 			glFogfv (GL_FOG_COLOR, fogColor);
 			//glFogf (GL_FOG_DENSITY, 0.35);
@@ -114,7 +114,7 @@ void fog(){
 			glFogf (GL_FOG_START, 1.0);
 			glFogf (GL_FOG_END, 5.0);
 		}
-		glClearColor(1, 0.5, 0.5, 0.5);  /* fog color */
+		glClearColor(0.894, 0.678, 0.525, 0.5);  /* fog color */
 	}
 	else
 		glDisable(GL_FOG);
@@ -317,6 +317,14 @@ void terrain(){
 
 	glEnable(GL_TEXTURE_2D);
 	glPushMatrix();
+	GLfloat mat_specular[] = {4.0, 2.0, 2.0, 1.0};
+	GLfloat mat_shininess[] = {50.0f};
+	glShadeModel (GL_SMOOTH);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+	GLfloat mat_diffuse[] = {0.843, 0.514, 0.278, 1.0f};
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+	glColor3f(0.2f, 0.2f, 1.0f);
 	glTranslatef(-44.0f,-2.0f,-44.0f);
     for (int x = 1; x < MAP_SIZE-1; x++) { 
       for (int z = 1; z < MAP_SIZE-1; z++) {
@@ -324,11 +332,11 @@ void terrain(){
 			glBindTexture(GL_TEXTURE_2D, texture1);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glColor3f(1.0f, 1.0f, 1.0f);
 			glVertex3f(x,height[x][z],z);
 			glVertex3f(x+1,height[x+1][z],z);
 			glVertex3f(x+1,height[x+1][z+1],z + 1);
 			glVertex3f(x,height[x][z+1],z+1);
+			glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         glEnd();
       }
     }
@@ -363,13 +371,14 @@ void renderScene(void) {
 	//Display Fog
 	fog();
 
+	//motion blur
+	motionBlur();
+
 	//1 way
 	glCallList(displayList);
 	
-
 	glTranslatef(0, 4, 0);
 	
-
 	glutSwapBuffers();
 }
 
@@ -417,8 +426,6 @@ int main(int argc, char **argv) {
 	glutKeyboardFunc(keyboard);
 	//glutIdleFunc(renderScene);
 	glutReshapeFunc(changeSize);
-	
-	
 	
 	glutMainLoop();
 	
