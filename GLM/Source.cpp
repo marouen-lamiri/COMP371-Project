@@ -24,6 +24,14 @@ GLuint texture1;
 int terrainTranslationConstant_X = 94;
 int terrainTranslationConstant_Z = 44;
 
+bool isfirstPerson = false;
+//float helicopterPositionX = 0;
+//float helicopterPositionY = 0;
+//float helicopterPositionZ = 0;
+bool light0_isEnabled = true;
+bool isHighBeamMode = true;
+
+
 
 /* perlin noise functions: */
 inline double findnoise2(double x,double y) {
@@ -61,6 +69,8 @@ double noise(double x,double y) {
 void keyboard(unsigned char key, int xx, int yy) {
 	glutPostRedisplay();
 	switch(key) {
+	case 'l' : light0_isEnabled = ! light0_isEnabled; break;
+	case 'h' : isHighBeamMode = !isHighBeamMode; break;
 	case 'p' : terrainTranslationConstant_X -= 5; break;
 	case 'o' : terrainTranslationConstant_Z -= 5; break;
 	case 'a' : x-=2; break; 
@@ -158,6 +168,74 @@ void fog(){
 	else
 		glDisable(GL_FOG);
 }
+
+
+/* spotlight functions: */
+void createSpotLight(float positionX, float positionY, float positionZ)
+{
+	GLfloat specular[] = {1.0, 1.0, 1.0, 1.0};
+	GLfloat shininess[] = {50.0};
+	//myFalcon.pos_x , myFalcom.pos_y, myFalcon.pos_z;
+	GLfloat position[] = {myFalcon.pos_x, myFalcon.pos_y, myFalcon.pos_z+5.0f, 1.0};
+	GLfloat color[4] = { 0.0f, 1.0f, 1.0f, 1.0f};
+	GLfloat diffuse[] = {1.0, 1.0, 1.0, 1.0};
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
+
+	glLightfv(GL_LIGHT0,GL_SPECULAR,specular);//GL_LIGHT0
+	glLightfv(GL_LIGHT0,GL_POSITION,position);
+	glLightf(GL_LIGHT0,GL_SPOT_CUTOFF,50.0f);
+	glLightf(GL_LIGHT0,GL_SPOT_EXPONENT,2.0f);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, color);
+	glEnable(GL_COLOR_MATERIAL);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_LIGHT0);
+}
+
+void spotlight() {
+
+	// SPOTLIGHT 
+
+	glPushMatrix();
+
+	if(light0_isEnabled) {
+		glEnable(GL_LIGHT0); //enable the light
+	} else {
+		glDisable(GL_LIGHT0);
+	}
+	// set last term to 0 for a spotlight (see chp 5 in ogl prog guide) 
+	//myFalcon.pos_x , myFalcom.pos_y, myFalcon.pos_z;
+	GLfloat lightpos_blueLight[] = {mymodel1.pos_x+2.0f, 0, mymodel1.pos_z, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
+	glLightfv(GL_LIGHT0,GL_POSITION, lightpos_blueLight); 
+
+	if(isHighBeamMode){
+		GLfloat diffuse_blueLight[] = {1,1,1,1}; 
+		GLfloat ambient_blueLight[] = {1,1,1,1}; //{.5,0,0,1}; 
+		GLfloat specular_blueLight[] = {1,1,1,1}; 
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse_blueLight); 
+		glLightfv(GL_LIGHT0, GL_AMBIENT, ambient_blueLight); 
+		glLightfv(GL_LIGHT0, GL_SPECULAR, specular_blueLight); 
+
+		glLightf(GL_LIGHT0,GL_SPOT_CUTOFF,30.0f);
+		GLfloat directionVector_blueLight[] = {3.0f, -10.0f, 0};
+		glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, directionVector_blueLight);
+	} else {
+		GLfloat diffuse_blueLight[] = {1,1,1,1}; 
+		GLfloat ambient_blueLight[] = {1,1,1,1}; //{.5,0,0,1}; 
+		GLfloat specular_blueLight[] = {1,1,1,1}; 
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse_blueLight); 
+		glLightfv(GL_LIGHT0, GL_AMBIENT, ambient_blueLight); 
+		glLightfv(GL_LIGHT0, GL_SPECULAR, specular_blueLight); 
+
+		glLightf(GL_LIGHT0,GL_SPOT_CUTOFF,10.0f);
+		GLfloat directionVector_blueLight[] = {1.0f, -10.0f, 0};
+		glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, directionVector_blueLight);
+	}
+
+	glPopMatrix();
+}
+/* spotlight functions: */
+
+
 
 void terrain(){
 
@@ -355,19 +433,25 @@ void terrain(){
 	//int MAP_SIZE = 88;
 	int MAP_SIZE = 88;
 
-	// get a noise map:
+	// get a noise map for each translation of the terrain:
 	int height[88][88];
 	//int terrainTranslationConstant_X = 94; // now made global vars
 	//int terrainTranslationConstant_Z = 44;
+	double getnoise =0;
+
+	// params:
+	double zoom = 10.0;//0.000001;//1.0;
+	double p = 0.05;//0.5;//P stands for persistence, this controls the roughness of the picture, i use 1/2
+	double zoomPerlin = 40.0;//75;//75;
+	int octaves=3;
+
+	// terrain generation:
+	int xTranslated;
+	int zTranslated;
 	for (int x = 1; x < MAP_SIZE-1; x++) { 
-		int xTranslated = x + terrainTranslationConstant_X;
-		double getnoise =0;
-		double zoom = 10.0;//0.000001;//1.0;
-		double p = 0.05;//0.5;//P stands for persistence, this controls the roughness of the picture, i use 1/2
-		double zoomPerlin = 40.0;//75;//75;
-		int octaves=3;
+		xTranslated = x + terrainTranslationConstant_X;
 		for (int z = 1; z < MAP_SIZE-1; z++) {
-			int zTranslated = z + terrainTranslationConstant_Z;
+			zTranslated = z + terrainTranslationConstant_Z;
 			for(int a=0;a<octaves-1;a++) { //This loops trough the octaves.
 				double frequency = pow(2,a);//This increases the frequency with every loop of the octave.
 				double amplitude = pow(p,a);//This decreases the amplitude with every loop of the octave.
@@ -414,8 +498,9 @@ void terrain(){
 
 void renderScene(void) {
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	terrain();
+	spotlight();
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -486,6 +571,9 @@ void init(int argc, char **argv)
 	//Image* image = loadBMP("models/rock.bmp");
 	//texture1 = loadTexture(image);
 	//delete image;
+
+	// create spotlight:
+	createSpotLight(0,0,0);
 
 }
 
