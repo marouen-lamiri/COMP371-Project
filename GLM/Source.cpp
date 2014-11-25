@@ -21,6 +21,9 @@ GLMmodel* mymodel2;
 
 GLuint texture1;
 
+int terrainTranslationConstant_X = 94;
+int terrainTranslationConstant_Z = 44;
+
 
 /* perlin noise functions: */
 inline double findnoise2(double x,double y) {
@@ -45,7 +48,7 @@ double noise(double x,double y) {
 	v=findnoise2(floorx+1,floory+1);
 	double int1=interpolate(s,t,x-floorx);//Interpolate between the values.
 	double int2=interpolate(u,v,x-floorx);//Here we use x-floorx, to get 1st dimension. Don't mind the x-floorx thingie, it's part of the cosine formula.
-	
+
 	return interpolate(int1,int2,y-floory);//Here we use y-floory, to get the 2nd dimension.
 }
 /* perlin noise functions END */
@@ -58,6 +61,8 @@ double noise(double x,double y) {
 void keyboard(unsigned char key, int xx, int yy) {
 	glutPostRedisplay();
 	switch(key) {
+	case 'p' : terrainTranslationConstant_X -= 5; break;
+	case 'o' : terrainTranslationConstant_Z -= 5; break;
 	case 'a' : x-=2; break; 
 	case 'd' : x+=2; break; 
 	case 's' : z+=2; break; 
@@ -347,23 +352,27 @@ void terrain(){
 		1,2,2,3,4,4,3,3,1,2,2,3,4,4,3,3,1,2,2,3,4,4,3,3}
 	};
 
+	//int MAP_SIZE = 88;
 	int MAP_SIZE = 88;
-	//int MAP_SIZE = 10;
 
 	// get a noise map:
 	int height[88][88];
+	//int terrainTranslationConstant_X = 94; // now made global vars
+	//int terrainTranslationConstant_Z = 44;
 	for (int x = 1; x < MAP_SIZE-1; x++) { 
+		int xTranslated = x + terrainTranslationConstant_X;
 		double getnoise =0;
 		double zoom = 10.0;//0.000001;//1.0;
 		double p = 0.05;//0.5;//P stands for persistence, this controls the roughness of the picture, i use 1/2
 		double zoomPerlin = 40.0;//75;//75;
 		int octaves=3;
 		for (int z = 1; z < MAP_SIZE-1; z++) {
+			int zTranslated = z + terrainTranslationConstant_Z;
 			for(int a=0;a<octaves-1;a++) { //This loops trough the octaves.
 				double frequency = pow(2,a);//This increases the frequency with every loop of the octave.
 				double amplitude = pow(p,a);//This decreases the amplitude with every loop of the octave.
-				getnoise = noise(((double)x)*frequency/zoomPerlin,((double)z)/zoomPerlin*frequency)*amplitude;//This uses our perlin noise functions. It calculates all our zoom and frequency and amplitude
-				
+				getnoise = noise(((double)xTranslated)*frequency/zoomPerlin,((double)zTranslated)/zoomPerlin*frequency)*amplitude;//This uses our perlin noise functions. It calculates all our zoom and frequency and amplitude
+
 			}
 			height[x][z] = getnoise * 100 ;
 		}
@@ -406,6 +415,7 @@ void terrain(){
 void renderScene(void) {
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	terrain();
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
