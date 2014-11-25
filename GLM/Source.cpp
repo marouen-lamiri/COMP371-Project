@@ -33,11 +33,13 @@ GLuint texture1;
 int terrainTranslationConstant_X = 94;
 int terrainTranslationConstant_Z = 44;
 
-bool isfirstPerson = false;
+bool isInWireFrameMode = false;
+bool isfirstPerson = true;
 //float helicopterPositionX = 0;
 //float helicopterPositionY = 0;
 //float helicopterPositionZ = 0;
-bool light0_isEnabled = true;//true;
+bool light0_isEnabled = true;
+bool light1_isEnabled = true;//true;
 bool light2_isEnabled = true;
 bool isHighBeamMode = true;
 int frameCounter = 0;
@@ -81,6 +83,7 @@ double noise(double x,double y) {
 void keyboard(unsigned char key, int xx, int yy) {
 	glutPostRedisplay();
 	switch(key) {
+	case't': isInWireFrameMode = !isInWireFrameMode; break;
 	case '1': isfirstPerson = true; break;
 	case '3': isfirstPerson = false; break;
 	case 'h' : isHighBeamMode = !isHighBeamMode; break;
@@ -91,8 +94,8 @@ void keyboard(unsigned char key, int xx, int yy) {
 		//case 's' : z+=2; break; 
 		//case 'w' : myFalcon.moveForward(); break; 
 		//case 'w' : z-=2; break; 
-	case 'a' : myFalcon.pos_x -= 1; break; 
-	case 'd' : myFalcon.pos_x += 1; break; 
+	case 'a' : myFalcon.pos_x += 1; break; 
+	case 'd' : myFalcon.pos_x -= 1; break; 
 	case 'w' : myFalcon.pos_z += 1; break; 
 	case 's' : myFalcon.pos_z -= 1; break; 
 	case '.' : y-=2; break; 
@@ -152,15 +155,15 @@ void processSpecialKeys(int key, int xx, int yy) {
 	float fraction = 0.1f;
 
 	switch (key) {
-		//case GLUT_KEY_F1:
-		//	light0_isEnabled = ! light0_isEnabled;
-		//	break;
-		//	//case GLUT_KEY_F2:
-		//	//	light1_isEnabled = ! light1_isEnabled;
-		//	//	break;
-		//case GLUT_KEY_F3:
-		//	light2_isEnabled = ! light2_isEnabled;
-		//	break;
+	case GLUT_KEY_F1:
+		light0_isEnabled = ! light0_isEnabled;
+		break;
+	case GLUT_KEY_F2:
+		light1_isEnabled = ! light1_isEnabled;
+		break;
+	case GLUT_KEY_F3:
+		light2_isEnabled = ! light2_isEnabled;
+		break;
 		//case GLUT_KEY_F4:
 		//	isMetalAppearance = ! isMetalAppearance;
 		//	break;
@@ -294,18 +297,26 @@ void createSpotLight(float positionX, float positionY, float positionZ)
 	GLfloat shininess[] = {50.0};
 	//myFalcon.pos_x , myFalcom.pos_y, myFalcon.pos_z;
 	GLfloat position[] = {myFalcon.pos_x, myFalcon.pos_y, myFalcon.pos_z+5.0f, 1.0};
-	GLfloat color[4] = { 0.0f, 1.0f, 1.0f, 1.0f};
+	GLfloat color[4] = { 1.0f, 1.0f, 1.0f, 1.0f};
 	GLfloat diffuse[] = {1.0, 1.0, 1.0, 1.0};
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
 
-	glLightfv(GL_LIGHT0,GL_SPECULAR,specular);//GL_LIGHT0
-	glLightfv(GL_LIGHT0,GL_POSITION,position);
-	glLightf(GL_LIGHT0,GL_SPOT_CUTOFF,50.0f);
-	glLightf(GL_LIGHT0,GL_SPOT_EXPONENT,2.0f);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, color);
+	//GLfloat diffuse_blueLight[] = {1,1,1,1}; 
+	//GLfloat ambient_blueLight[] = {1,1,1,1}; //{.5,0,0,1}; 
+	//GLfloat specular_blueLight[] = {1,1,1,1}; 
+	//glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse_blueLight); 
+	//glLightfv(GL_LIGHT1, GL_AMBIENT, ambient_blueLight); 
+	//glLightfv(GL_LIGHT1, GL_SPECULAR, specular_blueLight); 
+
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse);
+
+	glLightfv(GL_LIGHT1,GL_SPECULAR,specular);//GL_LIGHT0
+	glLightfv(GL_LIGHT1,GL_POSITION,position);
+	glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,50.0f);
+	glLightf(GL_LIGHT1,GL_SPOT_EXPONENT,2.0f);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, color);
 	glEnable(GL_COLOR_MATERIAL);
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHT1);
 }
 
 void spotlight() {
@@ -314,42 +325,28 @@ void spotlight() {
 
 	glPushMatrix();
 
-	if(light0_isEnabled) {
-		glEnable(GL_LIGHT0); //enable the light
+	if(light1_isEnabled) {
+		glEnable(GL_LIGHT1); //enable the light
 	} else {
-		glDisable(GL_LIGHT0);
+		glDisable(GL_LIGHT1);
 	}
 	// set last term to 0 for a spotlight (see chp 5 in ogl prog guide) 
 	//myFalcon.pos_x , myFalcom.pos_y, myFalcon.pos_z;
 	//GLfloat lightpos_blueLight[] = {mymodel1.pos_x+2.0f, 0, mymodel1.pos_z, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
 	//GLfloat lightpos_blueLight[] = {0+2.0f, 0, 0, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
 	GLfloat lightpos_blueLight[] = {myFalcon.pos_x, myFalcon.pos_y + 10.0f, myFalcon.pos_z, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
-	glLightfv(GL_LIGHT0,GL_POSITION, lightpos_blueLight); 
+	glLightfv(GL_LIGHT1,GL_POSITION, lightpos_blueLight); 
 
 	if(isHighBeamMode){
-		GLfloat diffuse_blueLight[] = {1,1,1,1}; 
-		GLfloat ambient_blueLight[] = {1,1,1,1}; //{.5,0,0,1}; 
-		GLfloat specular_blueLight[] = {1,1,1,1}; 
-		glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse_blueLight); 
-		glLightfv(GL_LIGHT0, GL_AMBIENT, ambient_blueLight); 
-		glLightfv(GL_LIGHT0, GL_SPECULAR, specular_blueLight); 
-
-		glLightf(GL_LIGHT0,GL_SPOT_CUTOFF,90.0f);
+		glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,90.0f);
 		//GLfloat directionVector_blueLight[] = {3.0f, -10.0f, 0};
 		GLfloat directionVector_blueLight[] = {myFalcon.pos_x - lightpos_blueLight[0], myFalcon.pos_y - lightpos_blueLight[1], myFalcon.pos_z - lightpos_blueLight[2]};
-		glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, directionVector_blueLight);
+		glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, directionVector_blueLight);
 	} else {
-		GLfloat diffuse_blueLight[] = {1,1,1,1}; 
-		GLfloat ambient_blueLight[] = {1,1,1,1}; //{.5,0,0,1}; 
-		GLfloat specular_blueLight[] = {1,1,1,1}; 
-		glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse_blueLight); 
-		glLightfv(GL_LIGHT0, GL_AMBIENT, ambient_blueLight); 
-		glLightfv(GL_LIGHT0, GL_SPECULAR, specular_blueLight); 
-
-		glLightf(GL_LIGHT0,GL_SPOT_CUTOFF,40.0f);
+		glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,40.0f);
 		//GLfloat directionVector_blueLight[] = {1.0f, -10.0f, 0};
 		GLfloat directionVector_blueLight[] = {myFalcon.pos_x - lightpos_blueLight[0], myFalcon.pos_y - lightpos_blueLight[1] - 10.0f, myFalcon.pos_z - lightpos_blueLight[2]};
-		glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, directionVector_blueLight);
+		glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, directionVector_blueLight);
 	}
 
 	glPopMatrix();
@@ -362,9 +359,18 @@ void createRedLight(float positionX, float positionY, float positionZ)
 	GLfloat shininess[] = {50.0};
 	//GLfloat position[] = {helicopterPositionX, helicopterPositionY, helicopterPositionZ+5.0f, 1.0};
 	GLfloat position[] = {0, 20.0f, 0, 1.0};
-	GLfloat color[4] = { 0.0f, 1.0f, 1.0f, 1.0f};
-	GLfloat diffuse[] = {1.0, 1.0, 1.0, 1.0};
-	glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuse);
+	GLfloat color[4] = { 1.0f, 1.0f, 1.0f, 1.0f};
+	//GLfloat diffuse[] = {1.0, 1.0, 1.0, 1.0};
+	//GLfloat diffuse[] = {0.0, 0.0, 0.0, 1.0};
+	//glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuse);
+
+	GLfloat diffuse[] = {0,0,0,1};//{1,1,1,1}; //{1,1,1,1};//
+	GLfloat ambient_[] = {0,0,0,1};//{1,1,1,1}; //{.5,0,0,1}; 
+	GLfloat specular_[] = {1,1,1,1};
+	glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuse); 
+	glLightfv(GL_LIGHT2, GL_AMBIENT, ambient_); 
+	glLightfv(GL_LIGHT2, GL_SPECULAR, specular_); 
+
 
 	//glShadeModel (GL_SMOOTH);
 	glLightfv(GL_LIGHT2,GL_SPECULAR,specular);//GL_LIGHT0
@@ -598,8 +604,8 @@ void terrain(){
 	//frameCounter++;
 
 	// handle ship roll rotation:
-	float rotSpeed = 2.0f;
-	float maxRotation = 14.0f;
+	float rotSpeed = 1.0f;
+	float maxRotation = 36.0f;
 	if(isRotatingLeft > 0) {
 		isRotatingLeft--;
 
@@ -617,6 +623,7 @@ void terrain(){
 		}
 		else {
 			myFalcon.roll -= rotSpeed;
+			terrainTranslationConstant_X -= 1;
 		}
 	}
 	if(isRotatingRight > 0) {
@@ -637,6 +644,7 @@ void terrain(){
 		}
 		else {
 			myFalcon.roll += rotSpeed;
+			terrainTranslationConstant_X += 1;
 		}
 	}
 	//end ship roll rotation
@@ -688,15 +696,15 @@ void terrain(){
 			glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 			glEnd();
 
-			// place some pilars on the landscape:
-			//if(x % 20 == 0) {
-			if(height[x+1][z] > 3.9f && x % 20 == 0) {				
-				glPushMatrix();
-				glTranslatef(x,height[x][z],z);
-				glScalef(1.0f, 70.0f, 1.0f);
-				glutSolidCube(1);
-				glPopMatrix();
-			}
+			//// place some pilars on the landscape:
+			////if(x % 20 == 0) {
+			//if(height[x+1][z] > 3.95f) {// && z % 20 == 0) {	// we never get landscape above 4.0f with current params	
+			//	glPushMatrix();
+			//	glTranslatef(x,height[x][z],z);
+			//	glScalef(1.0f, 10.0f, 1.0f);
+			//	glutSolidCube(1);
+			//	glPopMatrix();
+			//}
 		}
 	}
 	glPopMatrix();
@@ -761,13 +769,6 @@ void updateCamera() {
 		// RED LIGHT:
 		glPushMatrix();
 
-		GLfloat diffuse[] = {0,0,0,1};//{1,1,1,1}; //{1,1,1,1};//
-		GLfloat ambient_[] = {0,0,0,1};//{1,1,1,1}; //{.5,0,0,1}; 
-		GLfloat specular_[] = {1,1,1,1};
-		glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuse); 
-		glLightfv(GL_LIGHT2, GL_AMBIENT, ambient_); 
-		glLightfv(GL_LIGHT2, GL_SPECULAR, specular_); 
-
 		if(light2_isEnabled) {
 			glEnable(GL_LIGHT2); //enable the light
 		} else {
@@ -790,11 +791,20 @@ void updateCamera() {
 }
 
 void renderScene(void) {
-	//glLoadIdentity();
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glLoadIdentity();
+	if(isInWireFrameMode) {glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);}
 	terrain();
 	spotlight();
 
+	// main light:
+	if(light0_isEnabled) {
+		glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+		glEnable(GL_LIGHT0);
+		glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmb);
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiff);
+	} else {
+		glDisable(GL_LIGHT0);
+	}
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -807,8 +817,6 @@ void renderScene(void) {
 
 	drawAxes();
 
-	glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmb);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiff);
 
 	glTranslatef(x,y,z);
 	glRotatef(rotX, 1.0, 0.0, 0.0);
@@ -851,10 +859,10 @@ void init(int argc, char **argv)
 	glutCreateWindow("Project");
 
 	glEnable(GL_TEXTURE_2D);
-	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
+
+
 	glEnable(GL_COLOR_MATERIAL);
 
 
