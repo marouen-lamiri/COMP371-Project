@@ -14,8 +14,6 @@ public:
 
 	float roll, pitch, heading;
 
-	float forwardX, forwardY, forwardZ;
-
 	Falcon();
 	~Falcon();
 	void Falcon::draw();

@@ -3,7 +3,7 @@
 
 Falcon::Falcon()
 {
-	speed = 0.02;
+	speed = 0.05;
 	//rotation
 	roll = 0;
 	pitch = 0;
@@ -13,6 +13,11 @@ Falcon::Falcon()
 	pos_x = 0;
 	pos_y = 0;
 	pos_z = 0;
+
+	//forward
+	forwardX = 0.0f;
+	forwardY = 0.0f;
+	forwardZ = 1.0f;
 
 
 	//load Model
@@ -35,6 +40,7 @@ Falcon::~Falcon()
 }
 void Falcon::draw()
 {
+
 	
 	//Movement
 	//glLoadIdentity();
@@ -58,9 +64,26 @@ void Falcon::moveForward(){
 	float yRotRad = (-heading / 180 * PI);
 	float xRotRad = (-pitch / 180 * PI);
 
+	float tPosX = pos_x;
+	float tPosY = pos_y;
+	float tPosZ = pos_z;
+
 	pos_x -= sin(yRotRad) * speed;
 	pos_z += cos(yRotRad) * speed;
 	pos_y += sin(xRotRad) * speed;
+
+
+	//get forward vector
+	forwardX = pos_x - tPosX;
+	forwardY = pos_y - tPosY;
+	forwardZ = pos_z - tPosZ;
+
+	float l = sqrt(forwardX*forwardX + forwardY *forwardY + forwardZ*forwardZ);
+
+
+	forwardX /= l;
+	forwardY /= l;
+	forwardZ /= l;
 
 }
 
