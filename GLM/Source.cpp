@@ -639,6 +639,7 @@ void terrain(){
 			myFalcon.roll += rotSpeed;
 		}
 	}
+	//end ship roll rotation
 
 
 	// terrain generation:
@@ -687,6 +688,15 @@ void terrain(){
 			glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 			glEnd();
 
+			// place some pilars on the landscape:
+			//if(x % 20 == 0) {
+			if(height[x+1][z] > 3.9f && x % 20 == 0) {				
+				glPushMatrix();
+				glTranslatef(x,height[x][z],z);
+				glScalef(1.0f, 70.0f, 1.0f);
+				glutSolidCube(1);
+				glPopMatrix();
+			}
 		}
 	}
 	glPopMatrix();
