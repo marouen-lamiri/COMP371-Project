@@ -39,7 +39,7 @@ bool isfirstPerson = true;
 //float helicopterPositionX = 0;
 //float helicopterPositionY = 0;
 //float helicopterPositionZ = 0;
-bool light0_isEnabled = true;
+bool light0_isEnabled = false;
 bool light1_isEnabled = true;//true;
 bool light2_isEnabled = true;
 bool isHighBeamMode = true;
@@ -51,61 +51,65 @@ bool Smoke = true;
 int height[88][88];
 bool sand = false;
 float angleExplosion = 0;
+int pilarsAreDrawn;
 
+// textures:
+//GLuint texture1;
+int displayList2;
 
 // ----------------------------------- functions -------------------------------------------------
 void smoke(){
-    if(Smoke){
+	if(Smoke){
 
-        glPushMatrix();
+		glPushMatrix();
 		glTranslatef(myFalcon.pos_x, myFalcon.pos_y, myFalcon.pos_z);// put smoke at rear of ship
-        GLfloat mat_specular[] = {4.0, 2.0, 2.0, 1.0};
-        GLfloat mat_shininess[] = {50.0f};
-        glShadeModel (GL_SMOOTH);
-        glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-        GLfloat mat_diffuse[] = {0.961, 0.961, 0.961, 1.0f};
-        glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
-        for(float i = 0; i < 30; i+=0.01){
-            glColor3f(1.0,0.0,0.0);
-            glTranslatef(0.0, 0.0+i, 0.0);
-            glutSolidCube(0.3);
-            glTranslatef(0.1,0.1+i,0.1);
-            glutSolidCube(0.3);
-            glTranslatef(0.1,0.0+i,0.1);
-            glutSolidCube(0.3);
-            glTranslatef(0.1,0.1+i,0.0);
-            glRotatef(angleExplosion++,0.0,1.0,0.0);
-        }
-        glPopMatrix();
-    }
+		GLfloat mat_specular[] = {4.0, 2.0, 2.0, 1.0};
+		GLfloat mat_shininess[] = {50.0f};
+		glShadeModel (GL_SMOOTH);
+		glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+		GLfloat mat_diffuse[] = {0.961, 0.961, 0.961, 1.0f};
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+		for(float i = 0; i < 30; i+=0.01){
+			glColor3f(1.0,0.0,0.0);
+			glTranslatef(0.0, 0.0+i, 0.0);
+			glutSolidCube(0.3);
+			glTranslatef(0.1,0.1+i,0.1);
+			glutSolidCube(0.3);
+			glTranslatef(0.1,0.0+i,0.1);
+			glutSolidCube(0.3);
+			glTranslatef(0.1,0.1+i,0.0);
+			glRotatef(angleExplosion++,0.0,1.0,0.0);
+		}
+		glPopMatrix();
+	}
 }
 
 void sandStorm()
 {        
-    if(sand){
+	if(sand){
 
-        glPushMatrix();
+		glPushMatrix();
 		glTranslatef(myFalcon.pos_x, myFalcon.pos_y, myFalcon.pos_z);// put smoke at rear of ship
-        GLfloat mat_specular[] = {4.0, 2.0, 2.0, 1.0};
-        GLfloat mat_shininess[] = {50.0f};
-        glShadeModel (GL_SMOOTH);
-        glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-        GLfloat mat_diffuse[] = {1, 0.647, 0, 1.0f};
+		GLfloat mat_specular[] = {4.0, 2.0, 2.0, 1.0};
+		GLfloat mat_shininess[] = {50.0f};
+		glShadeModel (GL_SMOOTH);
+		glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+		GLfloat mat_diffuse[] = {1, 0.647, 0, 1.0f};
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
-        for(float i = 0; i < 10; i+=0.1){
-            for(float j = 0; j < 10; j+= 0.1){
-                glTranslatef(j, i, 0.0);
-                glutSolidCube(0.025);
-                glTranslatef(-j,-i,0.1);
-                glutSolidCube(0.025);
-                glTranslatef(0.1,-i,j);
-                glutSolidCube(0.025);
-                glTranslatef(0.1,i,j);
-                glRotatef(angleExplosion++,0.0,1.0,0.0);
-            }
-        }
-        glPopMatrix();
-    }
+		for(float i = 0; i < 10; i+=0.1){
+			for(float j = 0; j < 10; j+= 0.1){
+				glTranslatef(j, i, 0.0);
+				glutSolidCube(0.025);
+				glTranslatef(-j,-i,0.1);
+				glutSolidCube(0.025);
+				glTranslatef(0.1,-i,j);
+				glutSolidCube(0.025);
+				glTranslatef(0.1,i,j);
+				glRotatef(angleExplosion++,0.0,1.0,0.0);
+			}
+		}
+		glPopMatrix();
+	}
 }
 
 
@@ -362,7 +366,8 @@ void createSpotLight(float positionX, float positionY, float positionZ)
 	GLfloat specular[] = {1.0, 1.0, 1.0, 1.0};
 	GLfloat shininess[] = {50.0};
 	//myFalcon.pos_x , myFalcom.pos_y, myFalcon.pos_z;
-	GLfloat position[] = {myFalcon.pos_x, myFalcon.pos_y, myFalcon.pos_z+5.0f, 1.0};
+	//GLfloat position[] = {myFalcon.pos_x, myFalcon.pos_y, myFalcon.pos_z+5.0f, 1.0};
+	GLfloat position[] = {0, 0, 5.0f, 1.0f};
 	GLfloat color[4] = { 1.0f, 1.0f, 1.0f, 1.0f};
 	GLfloat diffuse[] = {1.0, 1.0, 1.0, 1.0};
 
@@ -377,7 +382,7 @@ void createSpotLight(float positionX, float positionY, float positionZ)
 
 	glLightfv(GL_LIGHT1,GL_SPECULAR,specular);//GL_LIGHT0
 	glLightfv(GL_LIGHT1,GL_POSITION,position);
-	glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,50.0f);
+	glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,180.0f);//50.0f);
 	glLightf(GL_LIGHT1,GL_SPOT_EXPONENT,2.0f);
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, color);
 	glEnable(GL_COLOR_MATERIAL);
@@ -403,15 +408,24 @@ void spotlight() {
 	GLfloat lightpos_blueLight[] = {myFalcon.pos_x, myFalcon.pos_y + 10.0f, myFalcon.pos_z, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
 	glLightfv(GL_LIGHT1,GL_POSITION, lightpos_blueLight); 
 
+	float neg;
+	if(pilarsAreDrawn > 0) {
+		neg = -1.0f;
+	}
+
 	if(isHighBeamMode){
 		glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,90.0f);
 		//GLfloat directionVector_blueLight[] = {3.0f, -10.0f, 0};
-		GLfloat directionVector_blueLight[] = {myFalcon.pos_x - lightpos_blueLight[0], myFalcon.pos_y - lightpos_blueLight[1], myFalcon.pos_z - lightpos_blueLight[2]};
+		//GLfloat directionVector_blueLight[] = {myFalcon.pos_x - lightpos_blueLight[0], myFalcon.pos_y - lightpos_blueLight[1], myFalcon.pos_z - lightpos_blueLight[2]};
+		GLfloat directionVector_blueLight[] = {(myFalcon.pos_x - lightpos_blueLight[0])*neg, myFalcon.pos_y - lightpos_blueLight[1], (myFalcon.pos_z - lightpos_blueLight[2])*neg};
+		//GLfloat directionVector_blueLight[] = {(10.0f), -10.0f, 10.0f};
 		glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, directionVector_blueLight);
 	} else {
 		glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,40.0f);
 		//GLfloat directionVector_blueLight[] = {1.0f, -10.0f, 0};
-		GLfloat directionVector_blueLight[] = {myFalcon.pos_x - lightpos_blueLight[0], myFalcon.pos_y - lightpos_blueLight[1] - 10.0f, myFalcon.pos_z - lightpos_blueLight[2]};
+		//GLfloat directionVector_blueLight[] = {myFalcon.pos_x - lightpos_blueLight[0], myFalcon.pos_y - lightpos_blueLight[1] - 10.0f, myFalcon.pos_z - lightpos_blueLight[2]};
+		GLfloat directionVector_blueLight[] = {(myFalcon.pos_x - lightpos_blueLight[0])*neg, myFalcon.pos_y - lightpos_blueLight[1] - 10.0f, (myFalcon.pos_z - lightpos_blueLight[2])*neg};
+		//GLfloat directionVector_blueLight[] = {(10.0f), - 10.0f, 10.0f};
 		glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, directionVector_blueLight);
 	}
 
@@ -759,6 +773,7 @@ void terrain(){
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
 	glColor3f(0.2f, 0.2f, 1.0f);
 	glTranslatef(-44.0f,-2.0f,-44.0f);
+	//glTranslatef(-64.0f,-2.0f,-44.0f);
 	for (int x = 1; x < MAP_SIZE-1; x++) { 
 		for (int z = 1; z < MAP_SIZE-1; z++) {
 			glBegin(GL_QUADS);
@@ -779,20 +794,26 @@ void terrain(){
 
 			//// place some pilars on the landscape:
 			////if(x % 20 == 0) {
-			//if(height[x+1][z] > 3.95f) {// && z % 20 == 0) {	// we never get landscape above 4.0f with current params	
-			//	glPushMatrix();
-			//	glTranslatef(x,height[x][z],z);
-			//	glScalef(1.0f, 10.0f, 1.0f);
-			//	glutSolidCube(1);
-			//	glPopMatrix();
-			//}
+			if(height[x+1][z] > 3.95f) {// && z % 20 == 0) {	// we never get landscape above 4.0f with current params	
+				glPushMatrix();
+				glTranslatef(x,height[x][z],z);
+				glScalef(1.0f, 10.0f, 1.0f);
+				glutSolidCube(1);
+				glPopMatrix();
+				pilarsAreDrawn = 10;
+			}
 		}
 	}
+
+	pilarsAreDrawn--;
 
 	glPopMatrix();
 }
 
 void updateCamera() {
+
+	//glLoadIdentity();
+	//glPushMatrix();
 
 	//look at Millenium falcon at all times
 	float lookX = myFalcon.pos_x;
@@ -821,6 +842,7 @@ void updateCamera() {
 		//	//x+lx, 1.0f,  z+lz,
 		//	0.0f, 1.0f,  0.0f);
 		//glRotatef(-90,0.0,1.0,0.0);	
+		//glLoadIdentity();
 		gluLookAt(
 			eyeX, eyeY, eyeZ,
 			lookX, lookY, lookZ,
@@ -838,6 +860,7 @@ void updateCamera() {
 		float lx = eyeX + 70.0f;
 		float ly = eyeY + 70.0f;
 		float lz = eyeZ + 40.0f;
+		//glLoadIdentity();
 		gluLookAt(	
 			lx, ly, lz, //1.0f for ly before in example
 			//eyeX, eyeY + 10.0f, eyeZ,
@@ -862,7 +885,8 @@ void updateCamera() {
 		glLightfv(GL_LIGHT2, GL_POSITION, lightpos);
 
 		//GLfloat directionVector[] = {-lx,-ly,-lz};//{0, -1.0f, 0}; // camera lookat point is the origin.
-		GLfloat directionVector[] = {myFalcon.pos_x-lx,myFalcon.pos_y-ly,myFalcon.pos_z-lz};//{0, -1.0f, 0}; // camera lookat point is the origin.
+		//GLfloat directionVector[] = {myFalcon.pos_x-lx,myFalcon.pos_y-ly,myFalcon.pos_z-lz};//{0, -1.0f, 0}; // camera lookat point is the origin.
+		GLfloat directionVector[] = {0,-10.0f,0};//{0, -1.0f, 0}; // camera lookat point is the origin.
 		glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, directionVector);
 		glLightf(GL_LIGHT2, GL_SPOT_CUTOFF,180.0f);
 
@@ -870,13 +894,26 @@ void updateCamera() {
 
 		// END RED LIGHT.
 	}
+	//glPopMatrix();
 }
 
 void renderScene(void) {
+
 	glLoadIdentity();
+	glEnable(GL_TEXTURE_2D);
 
+		// draw falcon:
 
-	if(isInWireFrameMode) {glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);}
+	glLoadIdentity();
+	
+	updateCamera();
+
+	if(isInWireFrameMode) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	} else {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
+	
 	//terrain();
 	spotlight();
 
@@ -900,45 +937,55 @@ void renderScene(void) {
 		glDisable(GL_LIGHT0);
 	}
 
+
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glLoadIdentity();
+	///glLoadIdentity();
 	//gluLookAt(15.0, 15.0,	15.0,
 	//	0.0,	0.0,	0.0,
 	//	0.0f,	1.0f,	0.0f);	
-	updateCamera();
-
-	drawAxes();
-
-
-	glTranslatef(x,y,z);
-	glRotatef(rotX, 1.0, 0.0, 0.0);
-
-
+	//updateCamera();
+		//glLoadIdentity();
+	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, texture1);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	myFalcon.draw();
 
+	//drawAxes();
+
+
+	//glTranslatef(x,y,z);
+	//glRotatef(rotX, 1.0, 0.0, 0.0);
+
+
+	//glBindTexture(GL_TEXTURE_2D, texture1);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	
 	//Build the Height Map
+	//glLoadIdentity();
 	terrain();
+
 
 	//Display Fog
 	fog();
 
 
-	myFalcon.draw();
 
 	//motion blur
 	motionBlur();
 
-	//smoke();
+	//smoke(); // now in terrain function
 	//sandStorm();
 
 	//1 way
-	glCallList(displayList);
+	glCallList(displayList2);
 
-	glTranslatef(0, 4, 0);
+	//glTranslatef(0, 4, 0);
+
 
 
 
@@ -964,7 +1011,10 @@ void init(int argc, char **argv)
 
 
 	myFalcon = Falcon();
+	Image* image = loadBMP("TieFighter.bmp");
+	texture1 = loadTexture(image);
 
+	delete image;
 
 	createSpotLight(0,0,0);// create spotlight
 	createRedLight(0.0f,1.0f,0.0f); // create main light
