@@ -40,7 +40,9 @@ bool isfirstPerson = false;
 bool light0_isEnabled = true;//true;
 bool light2_isEnabled = true;
 bool isHighBeamMode = true;
-
+int frameCounter = 0;
+int isRotatingLeft;
+int isRotatingRight;
 
 
 /* perlin noise functions: */
@@ -82,13 +84,17 @@ void keyboard(unsigned char key, int xx, int yy) {
 	case '1': isfirstPerson = true; break;
 	case '3': isfirstPerson = false; break;
 	case 'h' : isHighBeamMode = !isHighBeamMode; break;
-	case 'p' : terrainTranslationConstant_X -= 5; break;
-	case 'o' : terrainTranslationConstant_Z -= 5; break;
-	case 'a' : x-=2; break; 
-	case 'd' : x+=2; break; 
-	case 's' : z+=2; break; 
+		//case 'p' : terrainTranslationConstant_X -= 5; break;
+		//case 'o' : terrainTranslationConstant_Z -= 5; break;
+		//case 'a' : x-=2; break; 
+		//case 'd' : x+=2; break; 
+		//case 's' : z+=2; break; 
 		//case 'w' : myFalcon.moveForward(); break; 
-	case 'w' : z-=2; break; 
+		//case 'w' : z-=2; break; 
+	case 'a' : myFalcon.pos_x -= 1; break; 
+	case 'd' : myFalcon.pos_x += 1; break; 
+	case 'w' : myFalcon.pos_z += 1; break; 
+	case 's' : myFalcon.pos_z -= 1; break; 
 	case '.' : y-=2; break; 
 	case ',' : y+=2; break; 
 	case 'k' : rotX-=2.0; break; 
@@ -146,15 +152,15 @@ void processSpecialKeys(int key, int xx, int yy) {
 	float fraction = 0.1f;
 
 	switch (key) {
-	case GLUT_KEY_F1:
-		light0_isEnabled = ! light0_isEnabled;
-		break;
-		//case GLUT_KEY_F2:
-		//	light1_isEnabled = ! light1_isEnabled;
+		//case GLUT_KEY_F1:
+		//	light0_isEnabled = ! light0_isEnabled;
 		//	break;
-	case GLUT_KEY_F3:
-		light2_isEnabled = ! light2_isEnabled;
-		break;
+		//	//case GLUT_KEY_F2:
+		//	//	light1_isEnabled = ! light1_isEnabled;
+		//	//	break;
+		//case GLUT_KEY_F3:
+		//	light2_isEnabled = ! light2_isEnabled;
+		//	break;
 		//case GLUT_KEY_F4:
 		//	isMetalAppearance = ! isMetalAppearance;
 		//	break;
@@ -163,32 +169,20 @@ void processSpecialKeys(int key, int xx, int yy) {
 		//	isTextureNumber++;
 		//	isTextureNumber = isTextureNumber % 5;
 		//	break;
-		//case GLUT_KEY_LEFT :
-		//	angle -= 0.1f;
-		//	lx = sin(angle)*radius;
-		//	lz = -cos(angle)*radius;
-		//	ly=0;
-		//	break;
-		//case GLUT_KEY_RIGHT :
-		//	angle += 0.1f;
-		//	lx = sin(angle)*radius;
-		//	lz = -cos(angle)*radius;
-		//	ly=0;
-		//	break;
-		//case GLUT_KEY_UP :
-		//	angle2 -= 0.1f;
-		//	ly = sin(angle2)*radius;
-		//	lx = -cos(angle2)*radius;
-		//	lz=0;
-		//	break;
-		//case GLUT_KEY_DOWN :
-		//	//x -= lx * fraction;
-		//	//z -= lz * fraction;
-		//	angle2 += 0.1f;
-		//	ly = sin(angle2)*radius;
-		//	lx = -cos(angle2)*radius;
-		//	lz=0;
-		//	break;
+	case GLUT_KEY_LEFT :
+		//terrainTranslationConstant_X -= 5;
+		isRotatingLeft = 5;
+		break;
+	case GLUT_KEY_RIGHT :
+		//terrainTranslationConstant_X += 5;
+		isRotatingRight = 5;
+		break;
+	case GLUT_KEY_UP :
+		myFalcon.pos_y += 1.0f;
+		break;
+	case GLUT_KEY_DOWN :
+		myFalcon.pos_y -= 1.0f;
+		break;
 	}
 }
 
@@ -595,6 +589,58 @@ void terrain(){
 	double zoomPerlin = 40.0;//75;//75;
 	int octaves=3;
 
+	// movement:
+	int speed = 1; // num of new rows of terrain vertices to create per frame
+	//if(frameCounter > 1) {
+	terrainTranslationConstant_Z -= speed; // this was incremented with o and p keys before, now the ship moves forward automatically.
+	//frameCounter = 0;
+	//}
+	//frameCounter++;
+
+	// handle ship roll rotation:
+	float rotSpeed = 2.0f;
+	float maxRotation = 14.0f;
+	if(isRotatingLeft > 0) {
+		isRotatingLeft--;
+
+		// move terrain:
+		terrainTranslationConstant_X -= 1;
+
+		// rotate ship:
+		if(myFalcon.roll < maxRotation) 
+			myFalcon.roll += rotSpeed;
+		//rotX += 1.0;
+	} 
+	else {
+		if(myFalcon.roll <= 0) {
+			//myFalcon.roll = 0;
+		}
+		else {
+			myFalcon.roll -= rotSpeed;
+		}
+	}
+	if(isRotatingRight > 0) {
+		isRotatingRight--;
+
+		// move terrain:
+		terrainTranslationConstant_X += 1;
+
+		// rotate ship:
+		if(myFalcon.roll > -maxRotation) 
+			myFalcon.roll -= rotSpeed;
+		//rotX += 1.0;
+
+	} 
+	else {
+		if(myFalcon.roll >= 0) {
+			//myFalcon.roll = 0;
+		}
+		else {
+			myFalcon.roll += rotSpeed;
+		}
+	}
+
+
 	// terrain generation:
 	int xTranslated;
 	int zTranslated;
@@ -658,7 +704,7 @@ void updateCamera() {
 	float eyeZ;
 
 	eyeX = (myFalcon.pos_x + myFalcon.forwardX * -distance);
-	eyeY = myFalcon.pos_y + myFalcon.forwardY * -distance;
+	eyeY = (myFalcon.pos_y + myFalcon.forwardY * -distance) + 1.0f;
 	eyeZ = -(myFalcon.pos_z + myFalcon.forwardZ * -distance); // minus important so we are behind the ship.
 
 	// Reset transformations
@@ -691,7 +737,7 @@ void updateCamera() {
 		//float lz = myFalcon.pos_z;
 		float lx = eyeX + 70.0f;
 		float ly = eyeY + 70.0f;
-		float lz = eyeZ;
+		float lz = eyeZ + 40.0f;
 		gluLookAt(	
 			lx, ly, lz, //1.0f for ly before in example
 			//eyeX, eyeY + 10.0f, eyeZ,
@@ -705,8 +751,8 @@ void updateCamera() {
 		// RED LIGHT:
 		glPushMatrix();
 
-		GLfloat diffuse[] = {1,1,1,1}; //{1,1,1,1};//
-		GLfloat ambient_[] = {1,1,1,1}; //{.5,0,0,1}; 
+		GLfloat diffuse[] = {0,0,0,1};//{1,1,1,1}; //{1,1,1,1};//
+		GLfloat ambient_[] = {0,0,0,1};//{1,1,1,1}; //{.5,0,0,1}; 
 		GLfloat specular_[] = {1,1,1,1};
 		glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuse); 
 		glLightfv(GL_LIGHT2, GL_AMBIENT, ambient_); 
@@ -756,6 +802,7 @@ void renderScene(void) {
 
 	glTranslatef(x,y,z);
 	glRotatef(rotX, 1.0, 0.0, 0.0);
+
 
 	glBindTexture(GL_TEXTURE_2D, texture1);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -823,6 +870,7 @@ int main(int argc, char **argv) {
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(processSpecialKeys);
 	//glutIdleFunc(renderScene);
+	glutIdleFunc(renderScene);
 	glutReshapeFunc(changeSize);
 
 
