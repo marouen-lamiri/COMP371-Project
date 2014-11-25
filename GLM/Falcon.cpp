@@ -3,7 +3,7 @@
 
 Falcon::Falcon()
 {
-	speed = 0.02;
+	speed = 0.1;
 	//rotation
 	roll = 0;
 	pitch = 0;
@@ -11,7 +11,7 @@ Falcon::Falcon()
 
 	//Position
 	pos_x = 0;
-	pos_y = 0;
+	pos_y = 5;
 	pos_z = 0;
 
 
