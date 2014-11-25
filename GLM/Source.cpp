@@ -222,6 +222,7 @@ Falcon myFalcon;
 
 
 GLuint texture1;
+GLuint texture2;
 
 void keyboard(unsigned char key, int xx, int yy) {
 	glutPostRedisplay();
@@ -435,15 +436,20 @@ void renderScene(void) {
 	glBindTexture(GL_TEXTURE_2D, texture1);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
 	
 	//Build the Height Map
+	glDisable(GL_TEXTURE_2D);
 	terrain();
+	glEnable(GL_TEXTURE_2D);
 
 	//Display Fog
 	fog();
+	glBindTexture(GL_TEXTURE_2D, texture2);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-
-
+	
 	myFalcon.draw();
 
 	if (detectCollision()){
@@ -482,6 +488,12 @@ void init(int argc, char **argv)
 
 
 	myFalcon = Falcon();
+	Image* image = loadBMP("GrassTexture.bmp");
+	texture1 = loadTexture(image);
+
+	image = loadBMP("Metal.bmp");
+	texture2 = loadTexture(image);
+	delete image;
 
 }
 
