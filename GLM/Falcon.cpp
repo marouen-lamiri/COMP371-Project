@@ -63,9 +63,7 @@ void Falcon::moveForward(){
 	pos_y += sin(xRotRad) * speed;
 
 }
-float[] Falcon::getForward {
 
-}
 void Falcon::Pitch(float p){
 	pitch += p;
 }
