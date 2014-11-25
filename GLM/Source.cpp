@@ -3,6 +3,7 @@
 #include <GL/glut.h>
 #include "imageloader.h"
 #include "Falcon.h"
+#include <iostream>
 
 #define PI 3.141592
 
@@ -45,6 +46,67 @@ bool isHighBeamMode = true;
 int frameCounter = 0;
 int isRotatingLeft;
 int isRotatingRight;
+int MAP_SIZE = 88;
+bool Smoke = true;
+int height[88][88];
+bool sand = false;
+float angleExplosion = 0;
+
+
+// ----------------------------------- functions -------------------------------------------------
+void smoke(){
+    if(Smoke){
+
+        glPushMatrix();
+		glTranslatef(myFalcon.pos_x, myFalcon.pos_y, myFalcon.pos_z);// put smoke at rear of ship
+        GLfloat mat_specular[] = {4.0, 2.0, 2.0, 1.0};
+        GLfloat mat_shininess[] = {50.0f};
+        glShadeModel (GL_SMOOTH);
+        glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+        GLfloat mat_diffuse[] = {0.961, 0.961, 0.961, 1.0f};
+        glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+        for(float i = 0; i < 30; i+=0.01){
+            glColor3f(1.0,0.0,0.0);
+            glTranslatef(0.0, 0.0+i, 0.0);
+            glutSolidCube(0.3);
+            glTranslatef(0.1,0.1+i,0.1);
+            glutSolidCube(0.3);
+            glTranslatef(0.1,0.0+i,0.1);
+            glutSolidCube(0.3);
+            glTranslatef(0.1,0.1+i,0.0);
+            glRotatef(angleExplosion++,0.0,1.0,0.0);
+        }
+        glPopMatrix();
+    }
+}
+
+void sandStorm()
+{        
+    if(sand){
+
+        glPushMatrix();
+		glTranslatef(myFalcon.pos_x, myFalcon.pos_y, myFalcon.pos_z);// put smoke at rear of ship
+        GLfloat mat_specular[] = {4.0, 2.0, 2.0, 1.0};
+        GLfloat mat_shininess[] = {50.0f};
+        glShadeModel (GL_SMOOTH);
+        glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+        GLfloat mat_diffuse[] = {1, 0.647, 0, 1.0f};
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+        for(float i = 0; i < 10; i+=0.1){
+            for(float j = 0; j < 10; j+= 0.1){
+                glTranslatef(j, i, 0.0);
+                glutSolidCube(0.025);
+                glTranslatef(-j,-i,0.1);
+                glutSolidCube(0.025);
+                glTranslatef(0.1,-i,j);
+                glutSolidCube(0.025);
+                glTranslatef(0.1,i,j);
+                glRotatef(angleExplosion++,0.0,1.0,0.0);
+            }
+        }
+        glPopMatrix();
+    }
+}
 
 
 /* perlin noise functions: */
@@ -83,6 +145,10 @@ double noise(double x,double y) {
 void keyboard(unsigned char key, int xx, int yy) {
 	glutPostRedisplay();
 	switch(key) {
+	case '2' : 
+		if(sand){sand = false;}
+		else {sand = true;}
+		break; 
 	case't': isInWireFrameMode = !isInWireFrameMode; break;
 	case '1': isfirstPerson = true; break;
 	case '3': isfirstPerson = false; break;
@@ -90,7 +156,7 @@ void keyboard(unsigned char key, int xx, int yy) {
 		//case 'p' : terrainTranslationConstant_X -= 5; break;
 		//case 'o' : terrainTranslationConstant_Z -= 5; break;
 		//case 'a' : x-=2; break; 
-		//case 'd' : x+=2; break; 
+		//case 'd' : x+=2; break; case
 		//case 's' : z+=2; break; 
 		//case 'w' : myFalcon.moveForward(); break; 
 		//case 'w' : z-=2; break; 
@@ -385,8 +451,24 @@ void createRedLight(float positionX, float positionY, float positionZ)
 
 
 
+bool detectCollision(){
+	int x = (int)(myFalcon.pos_x + 44.5);
+	int y = (int)myFalcon.pos_y;
+	int z = (int)(myFalcon.pos_z + 44.5);
+
+	if ((x >= 0 && x < MAP_SIZE) && (z >= 0 && z < MAP_SIZE)){
+		if (height[x][z] >= y){
+			return true;
+		}
+	}
+	return false;
+
+}
 
 void terrain(){
+
+	smoke();
+	sandStorm();
 
 	int height_[88][88] ={
 
@@ -579,12 +661,11 @@ void terrain(){
 		1,2,2,3,4,4,3,3,1,2,2,3,4,4,3,3,1,2,2,3,4,4,3,3}
 	};
 
-	//int MAP_SIZE = 88;
-	int MAP_SIZE = 88;
+	//int MAP_SIZE = 88; // now a global
 	//int MAP_SIZE = 10;
 
 	// get a noise map for each translation of the terrain:
-	int height[88][88];
+	//int height[88][88];
 	//int terrainTranslationConstant_X = 94; // now made global vars
 	//int terrainTranslationConstant_Z = 44;
 	double getnoise =0;
@@ -707,6 +788,7 @@ void terrain(){
 			//}
 		}
 	}
+
 	glPopMatrix();
 }
 
@@ -792,9 +874,21 @@ void updateCamera() {
 
 void renderScene(void) {
 	glLoadIdentity();
+
+
 	if(isInWireFrameMode) {glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);}
-	terrain();
+	//terrain();
 	spotlight();
+
+	// collision detection
+
+	if (detectCollision()){
+		Smoke = true;
+		std::cout << "collision Detected";
+	}
+	else{
+		Smoke = false;
+	}
 
 	// main light:
 	if(light0_isEnabled) {
@@ -837,6 +931,9 @@ void renderScene(void) {
 
 	//motion blur
 	motionBlur();
+
+	//smoke();
+	//sandStorm();
 
 	//1 way
 	glCallList(displayList);
