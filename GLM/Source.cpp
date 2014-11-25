@@ -12,6 +12,7 @@ float x=0, y=0, z=0, rotX=0;
 int fps=0, displayList=0;
 bool displayFog = false;
 bool displayMotionBlur = false;
+float angleExplosion = 0;
 
 // Mouse drag control
 int isDragging = 0; // true when dragging
@@ -23,6 +24,7 @@ float distance = 10;
 GLfloat lightPos[4] = {0.0, 2.0 ,0.0, 1.0};
 GLfloat lightAmb[3] = {0.1, 0.1, 0.1};
 GLfloat lightDiff[3] = {1.0, 1.0, 1.0};
+bool wire, Smoke, sand;
 int MAP_SIZE = 88;
 int height[88][88] = {
 
@@ -251,9 +253,71 @@ void keyboard(unsigned char key, int xx, int yy) {
 				displayFog = true;
 			}
 			break; 
+		case 'W':
+			if (wire){ glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); wire = false; }
+			else { glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); wire = true; }
+			break;
+		case 'q':
+			if (Smoke){ Smoke = false; }
+			else { Smoke = true; }
+			break;
+		case 'e':
+			if (sand){ sand = false; }
+			else { sand = true; }
+			break;
 		case 27  : exit(0);
 	}
 }
+void smoke(){
+	if (Smoke){
+		glPushMatrix();
+		GLfloat mat_specular[] = { 4.0, 2.0, 2.0, 1.0 };
+		GLfloat mat_shininess[] = { 50.0f };
+		glShadeModel(GL_SMOOTH);
+		glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+		GLfloat mat_diffuse[] = { 0.961, 0.961, 0.961, 1.0f };
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+		for (float i = 0; i < 30; i += 0.01){
+			glColor3f(1.0, 0.0, 0.0);
+			glTranslatef(0.0, 0.0 + i, 0.0);
+			glutSolidCube(0.3);
+			glTranslatef(0.1, 0.1 + i, 0.1);
+			glutSolidCube(0.3);
+			glTranslatef(0.1, 0.0 + i, 0.1);
+			glutSolidCube(0.3);
+			glTranslatef(0.1, 0.1 + i, 0.0);
+			glRotatef(angleExplosion++, 0.0, 1.0, 0.0);
+		}
+		glPopMatrix();
+	}
+}
+
+void sandStorm()
+{
+	if (sand){
+		glPushMatrix();
+		GLfloat mat_specular[] = { 4.0, 2.0, 2.0, 1.0 };
+		GLfloat mat_shininess[] = { 50.0f };
+		glShadeModel(GL_SMOOTH);
+		glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+		GLfloat mat_diffuse[] = { 1, 0.647, 0, 1.0f };
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+		for (float i = 0; i < 10; i += 0.1){
+			for (float j = 0; j < 10; j += 0.1){
+				glTranslatef(j, i, 0.0);
+				glutSolidCube(0.025);
+				glTranslatef(-j, -i, 0.1);
+				glutSolidCube(0.025);
+				glTranslatef(0.1, -i, j);
+				glutSolidCube(0.025);
+				glTranslatef(0.1, i, j);
+				glRotatef(angleExplosion++, 0.0, 1.0, 0.0);
+			}
+		}
+		glPopMatrix();
+	}
+}
+
 void mouseMove(int x, int y)
 {
 	if (isDragging) { // only when dragging
@@ -445,6 +509,8 @@ void renderScene(void) {
 
 	//Display Fog
 	fog();
+	sandStorm();
+	smoke();
 	glBindTexture(GL_TEXTURE_2D, texture2);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -453,7 +519,7 @@ void renderScene(void) {
 	myFalcon.draw();
 
 	if (detectCollision()){
-		//Draw Explosion Here
+		Smoke = true;
 		std::cout << "collision Detected";
 	}
 
@@ -509,7 +575,7 @@ int main(int argc, char **argv) {
 	// por registo de funcoes aqui
 	glutDisplayFunc(renderScene);
 	glutKeyboardFunc(keyboard);
-	//glutIdleFunc(renderScene);
+	glutIdleFunc(renderScene);
 	glutReshapeFunc(changeSize);
 
 	glutMouseFunc(mouseButton); // process mouse button push/release
