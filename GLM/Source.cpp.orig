@@ -386,21 +386,32 @@ void terrain(){
 			glBindTexture(GL_TEXTURE_2D, texture1);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+<<<<<<< HEAD
 			//glColor3f(1.0f, 1.0f, 1.0f);
 			glColor3f(0.5f, 0.0f, 0.5f);
 			//glutSolidCube(height[x][z]);
 
 			//draw vertices:
+=======
+>>>>>>> 8a5be9efacb07167b179bcb27ec2591a690d89fe
 			glVertex3f(x,height[x][z],z);
 			glVertex3f(x+1,height[x+1][z],z);
 			glVertex3f(x+1,height[x+1][z+1],z + 1);
 			glVertex3f(x,height[x][z+1],z+1);
-			glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+<<<<<<< HEAD
+
 			glEnd();
 
 		}
 	}
 	glPopMatrix();
+=======
+			glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        glEnd();
+      }
+    }
+    glPopMatrix();
+>>>>>>> 8a5be9efacb07167b179bcb27ec2591a690d89fe
 }
 
 void renderScene(void) {
@@ -438,9 +449,17 @@ void renderScene(void) {
 
 	//1 way
 	glCallList(displayList);
+<<<<<<< HEAD
+
 
 	glTranslatef(0, 4, 0);
 
+
+=======
+	
+	glTranslatef(0, 4, 0);
+	
+>>>>>>> 8a5be9efacb07167b179bcb27ec2591a690d89fe
 	glutSwapBuffers();
 }
 
@@ -488,9 +507,13 @@ int main(int argc, char **argv) {
 	glutKeyboardFunc(keyboard);
 	//glutIdleFunc(renderScene);
 	glutReshapeFunc(changeSize);
+<<<<<<< HEAD
 
 
 
+=======
+	
+>>>>>>> 8a5be9efacb07167b179bcb27ec2591a690d89fe
 	glutMainLoop();
 
 	return 0;
