@@ -30,6 +30,8 @@ Falcon myFalcon;
 
 GLuint texture1;
 
+<<<<<<< HEAD
+=======
 int terrainTranslationConstant_X = 94;
 int terrainTranslationConstant_Z = 44;
 
@@ -37,11 +39,11 @@ bool isfirstPerson = false;
 //float helicopterPositionX = 0;
 //float helicopterPositionY = 0;
 //float helicopterPositionZ = 0;
-bool light0_isEnabled = true;//true;
-bool light2_isEnabled = true;
+bool light0_isEnabled = true;
 bool isHighBeamMode = true;
 
 
+>>>>>>> master
 
 /* perlin noise functions: */
 inline double findnoise2(double x,double y) {
@@ -66,7 +68,11 @@ double noise(double x,double y) {
 	v=findnoise2(floorx+1,floory+1);
 	double int1=interpolate(s,t,x-floorx);//Interpolate between the values.
 	double int2=interpolate(u,v,x-floorx);//Here we use x-floorx, to get 1st dimension. Don't mind the x-floorx thingie, it's part of the cosine formula.
+<<<<<<< HEAD
+	
+=======
 
+>>>>>>> master
 	return interpolate(int1,int2,y-floory);//Here we use y-floory, to get the 2nd dimension.
 }
 /* perlin noise functions END */
@@ -79,15 +85,96 @@ double noise(double x,double y) {
 void keyboard(unsigned char key, int xx, int yy) {
 	glutPostRedisplay();
 	switch(key) {
-	case '1': isfirstPerson = true; break;
-	case '3': isfirstPerson = false; break;
+<<<<<<< HEAD
+//<<<<<<< HEAD
+		case 'a' : x-=2; break; 
+		case 'd' : x+=2; break; 
+		case 's' : z+=2; break; 
+		case 'w' : myFalcon.moveForward(); break; 
+		case '.' : y-=2; break; 
+		case ',' : y+=2; break; 
+		case 'k' : rotX-=2.0; break; 
+		case 'i' : rotX+=2.0; break; 
+		case 'm' : 
+			if(displayMotionBlur){
+				displayMotionBlur = false;
+			}
+			else {
+				displayMotionBlur = true;
+			}
+			break; 
+		case 'f' : 
+			if(displayFog){
+				displayFog = false;
+			}
+			else {
+				displayFog = true;
+			}
+			break; 
+		case 27  : exit(0);
+//=======
+//	case 'a' : x-=2; break; 
+//	case 'd' : x+=2; break; 
+//	case 's' : z+=2; break; 
+//	case 'w' : z-=2; break; 
+//	case '.' : y-=2; break; 
+//	case ',' : y+=2; break; 
+//	case 'k' : rotX-=2.0; break; 
+//	case 'i' : rotX+=2.0; break; 
+//	case 'm' : 
+//		if(displayMotionBlur){
+//			displayMotionBlur = false;
+//		}
+//		else {
+//			displayMotionBlur = true;
+//		}
+//		break; 
+//	case 'f' : 
+//		if(displayFog){
+//			displayFog = false;
+//		}
+//		else {
+//			displayFog = true;
+//		}
+//		break; 
+//	case 27  : exit(0);
+//>>>>>>> c4271f11939f4239f54be03a68d0736b68fd4215
+	}
+}
+void mouseMove(int x, int y)
+{
+	if (isDragging) { // only when dragging
+		// update the change in angle
+		deltaHeading = ((x - xDragStart) * 0.02);
+		deltaPitch = ((y - yDragStart) * 0.02);
+		myFalcon.heading -= deltaHeading; // update camera turning angle
+		myFalcon.pitch += deltaPitch;
+
+
+		
+	}
+}
+void mouseButton(int button, int state, int x, int y)
+{
+	if (button == GLUT_RIGHT_BUTTON) {
+		if (state == GLUT_DOWN) { // left mouse button pressed
+			isDragging = 1; // start dragging
+			xDragStart = x; // save x where button first pressed
+			yDragStart = y;	//save y where button first pressed
+		}
+		else  { /* (state = GLUT_UP) */
+			myFalcon.heading -= deltaHeading; // update camera turning angle
+			myFalcon.pitch += deltaPitch ;
+			isDragging = 0; // no longer dragging
+		}
+=======
+	case 'l' : light0_isEnabled = ! light0_isEnabled; break;
 	case 'h' : isHighBeamMode = !isHighBeamMode; break;
 	case 'p' : terrainTranslationConstant_X -= 5; break;
 	case 'o' : terrainTranslationConstant_Z -= 5; break;
 	case 'a' : x-=2; break; 
 	case 'd' : x+=2; break; 
 	case 's' : z+=2; break; 
-		//case 'w' : myFalcon.moveForward(); break; 
 	case 'w' : z-=2; break; 
 	case '.' : y-=2; break; 
 	case ',' : y+=2; break; 
@@ -110,117 +197,7 @@ void keyboard(unsigned char key, int xx, int yy) {
 		}
 		break; 
 	case 27  : exit(0);
-		//=======
-		//	case 'a' : x-=2; break; 
-		//	case 'd' : x+=2; break; 
-		//	case 's' : z+=2; break; 
-		//	case 'w' : z-=2; break; 
-		//	case '.' : y-=2; break; 
-		//	case ',' : y+=2; break; 
-		//	case 'k' : rotX-=2.0; break; 
-		//	case 'i' : rotX+=2.0; break; 
-		//	case 'm' : 
-		//		if(displayMotionBlur){
-		//			displayMotionBlur = false;
-		//		}
-		//		else {
-		//			displayMotionBlur = true;
-		//		}
-		//		break; 
-		//	case 'f' : 
-		//		if(displayFog){
-		//			displayFog = false;
-		//		}
-		//		else {
-		//			displayFog = true;
-		//		}
-		//		break; 
-		//	case 27  : exit(0);
-		//>>>>>>> c4271f11939f4239f54be03a68d0736b68fd4215
-	}
-}
-
-
-void processSpecialKeys(int key, int xx, int yy) {
-
-	float fraction = 0.1f;
-
-	switch (key) {
-	case GLUT_KEY_F1:
-		light0_isEnabled = ! light0_isEnabled;
-		break;
-		//case GLUT_KEY_F2:
-		//	light1_isEnabled = ! light1_isEnabled;
-		//	break;
-	case GLUT_KEY_F3:
-		light2_isEnabled = ! light2_isEnabled;
-		break;
-		//case GLUT_KEY_F4:
-		//	isMetalAppearance = ! isMetalAppearance;
-		//	break;
-		//case GLUT_KEY_F5:
-		//	//texturesIsEnabled = ! texturesIsEnabled;
-		//	isTextureNumber++;
-		//	isTextureNumber = isTextureNumber % 5;
-		//	break;
-		//case GLUT_KEY_LEFT :
-		//	angle -= 0.1f;
-		//	lx = sin(angle)*radius;
-		//	lz = -cos(angle)*radius;
-		//	ly=0;
-		//	break;
-		//case GLUT_KEY_RIGHT :
-		//	angle += 0.1f;
-		//	lx = sin(angle)*radius;
-		//	lz = -cos(angle)*radius;
-		//	ly=0;
-		//	break;
-		//case GLUT_KEY_UP :
-		//	angle2 -= 0.1f;
-		//	ly = sin(angle2)*radius;
-		//	lx = -cos(angle2)*radius;
-		//	lz=0;
-		//	break;
-		//case GLUT_KEY_DOWN :
-		//	//x -= lx * fraction;
-		//	//z -= lz * fraction;
-		//	angle2 += 0.1f;
-		//	ly = sin(angle2)*radius;
-		//	lx = -cos(angle2)*radius;
-		//	lz=0;
-		//	break;
-	}
-}
-
-
-
-
-void mouseMove(int x, int y)
-{
-	if (isDragging) { // only when dragging
-		// update the change in angle
-		deltaHeading = ((x - xDragStart) * 0.02);
-		deltaPitch = ((y - yDragStart) * 0.02);
-		myFalcon.heading -= deltaHeading; // update camera turning angle
-		myFalcon.pitch += deltaPitch;
-
-
-
-	}
-}
-void mouseButton(int button, int state, int x, int y)
-{
-	if (button == GLUT_RIGHT_BUTTON) {
-		if (state == GLUT_DOWN) { // left mouse button pressed
-			isDragging = 1; // start dragging
-			xDragStart = x; // save x where button first pressed
-			yDragStart = y;	//save y where button first pressed
-		}
-		else  { /* (state = GLUT_UP) */
-			myFalcon.heading -= deltaHeading; // update camera turning angle
-			myFalcon.pitch += deltaPitch ;
-			isDragging = 0; // no longer dragging
-		}
+>>>>>>> master
 	}
 }
 
@@ -327,9 +304,7 @@ void spotlight() {
 	}
 	// set last term to 0 for a spotlight (see chp 5 in ogl prog guide) 
 	//myFalcon.pos_x , myFalcom.pos_y, myFalcon.pos_z;
-	//GLfloat lightpos_blueLight[] = {mymodel1.pos_x+2.0f, 0, mymodel1.pos_z, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
-	//GLfloat lightpos_blueLight[] = {0+2.0f, 0, 0, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
-	GLfloat lightpos_blueLight[] = {myFalcon.pos_x, myFalcon.pos_y + 10.0f, myFalcon.pos_z, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
+	GLfloat lightpos_blueLight[] = {mymodel1.pos_x+2.0f, 0, mymodel1.pos_z, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
 	glLightfv(GL_LIGHT0,GL_POSITION, lightpos_blueLight); 
 
 	if(isHighBeamMode){
@@ -340,9 +315,8 @@ void spotlight() {
 		glLightfv(GL_LIGHT0, GL_AMBIENT, ambient_blueLight); 
 		glLightfv(GL_LIGHT0, GL_SPECULAR, specular_blueLight); 
 
-		glLightf(GL_LIGHT0,GL_SPOT_CUTOFF,90.0f);
-		//GLfloat directionVector_blueLight[] = {3.0f, -10.0f, 0};
-		GLfloat directionVector_blueLight[] = {myFalcon.pos_x - lightpos_blueLight[0], myFalcon.pos_y - lightpos_blueLight[1], myFalcon.pos_z - lightpos_blueLight[2]};
+		glLightf(GL_LIGHT0,GL_SPOT_CUTOFF,30.0f);
+		GLfloat directionVector_blueLight[] = {3.0f, -10.0f, 0};
 		glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, directionVector_blueLight);
 	} else {
 		GLfloat diffuse_blueLight[] = {1,1,1,1}; 
@@ -352,37 +326,14 @@ void spotlight() {
 		glLightfv(GL_LIGHT0, GL_AMBIENT, ambient_blueLight); 
 		glLightfv(GL_LIGHT0, GL_SPECULAR, specular_blueLight); 
 
-		glLightf(GL_LIGHT0,GL_SPOT_CUTOFF,40.0f);
-		//GLfloat directionVector_blueLight[] = {1.0f, -10.0f, 0};
-		GLfloat directionVector_blueLight[] = {myFalcon.pos_x - lightpos_blueLight[0], myFalcon.pos_y - lightpos_blueLight[1] - 10.0f, myFalcon.pos_z - lightpos_blueLight[2]};
+		glLightf(GL_LIGHT0,GL_SPOT_CUTOFF,10.0f);
+		GLfloat directionVector_blueLight[] = {1.0f, -10.0f, 0};
 		glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, directionVector_blueLight);
 	}
 
 	glPopMatrix();
 }
 /* spotlight functions: */
-
-void createRedLight(float positionX, float positionY, float positionZ)
-{
-	GLfloat specular[] = {1.0, 1.0, 1.0, 1.0};
-	GLfloat shininess[] = {50.0};
-	//GLfloat position[] = {helicopterPositionX, helicopterPositionY, helicopterPositionZ+5.0f, 1.0};
-	GLfloat position[] = {0, 20.0f, 0, 1.0};
-	GLfloat color[4] = { 0.0f, 1.0f, 1.0f, 1.0f};
-	GLfloat diffuse[] = {1.0, 1.0, 1.0, 1.0};
-	glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuse);
-
-	//glShadeModel (GL_SMOOTH);
-	glLightfv(GL_LIGHT2,GL_SPECULAR,specular);//GL_LIGHT0
-	glLightfv(GL_LIGHT2,GL_POSITION,position);
-	glLightf(GL_LIGHT2,GL_SPOT_CUTOFF,50.0f);
-	glLightf(GL_LIGHT2,GL_SPOT_EXPONENT,2.0f);
-	glLightfv(GL_LIGHT2, GL_DIFFUSE, color);
-	glEnable(GL_COLOR_MATERIAL);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_LIGHT2);
-}
-
 
 
 
@@ -581,7 +532,24 @@ void terrain(){
 
 	//int MAP_SIZE = 88;
 	int MAP_SIZE = 88;
+<<<<<<< HEAD
 	//int MAP_SIZE = 10;
+
+	// get a noise map:
+	int height[88][88];
+	for (int x = 1; x < MAP_SIZE-1; x++) { 
+		double getnoise =0;
+		double zoom = 10.0;//0.000001;//1.0;
+		double p = 0.05;//0.5;//P stands for persistence, this controls the roughness of the picture, i use 1/2
+		double zoomPerlin = 40.0;//75;//75;
+		int octaves=3;
+		for (int z = 1; z < MAP_SIZE-1; z++) {
+			for(int a=0;a<octaves-1;a++) { //This loops trough the octaves.
+				double frequency = pow(2,a);//This increases the frequency with every loop of the octave.
+				double amplitude = pow(p,a);//This decreases the amplitude with every loop of the octave.
+				getnoise = noise(((double)x)*frequency/zoomPerlin,((double)z)/zoomPerlin*frequency)*amplitude;//This uses our perlin noise functions. It calculates all our zoom and frequency and amplitude
+				
+=======
 
 	// get a noise map for each translation of the terrain:
 	int height[88][88];
@@ -607,6 +575,7 @@ void terrain(){
 				double amplitude = pow(p,a);//This decreases the amplitude with every loop of the octave.
 				getnoise = noise(((double)xTranslated)*frequency/zoomPerlin,((double)zTranslated)/zoomPerlin*frequency)*amplitude;//This uses our perlin noise functions. It calculates all our zoom and frequency and amplitude
 
+>>>>>>> master
 			}
 			height[x][z] = getnoise * 100 ;
 		}
@@ -644,10 +613,10 @@ void terrain(){
 		}
 	}
 	glPopMatrix();
+<<<<<<< HEAD
 }
 
-void updateCamera() {
-
+void updateCamera(){
 	//look at Millenium falcon at all times
 	float lookX = myFalcon.pos_x;
 	float lookY = myFalcon.pos_y;
@@ -657,97 +626,42 @@ void updateCamera() {
 	float eyeY;
 	float eyeZ;
 
-	eyeX = (myFalcon.pos_x + myFalcon.forwardX * -distance);
+	eyeX = myFalcon.pos_x + myFalcon.forwardX * -distance;
 	eyeY = myFalcon.pos_y + myFalcon.forwardY * -distance;
-	eyeZ = -(myFalcon.pos_z + myFalcon.forwardZ * -distance); // minus important so we are behind the ship.
-
-	// Reset transformations
-	//glLoadIdentity();
-
-	// Set the camera
-	if(isfirstPerson) {
-
-		//cout<<"FIRST PERSON CAM";
-		//glRotatef(90,0.0,1.0,0.0);		
-		//gluLookAt(
-		//	helicopterPositionX, helicopterPositionY, helicopterPositionZ+5.0f, //1.0f for ly before in example
-		//	helicopterPositionX+2.0f, helicopterPositionY, helicopterPositionZ+2.0f,
-		//	//x+lx, 1.0f,  z+lz,
-		//	0.0f, 1.0f,  0.0f);
-		//glRotatef(-90,0.0,1.0,0.0);	
-		gluLookAt(
-			eyeX, eyeY, eyeZ,
-			lookX, lookY, lookZ,
-			0.0, 1.0, 0.0);
-
-	} else {
-
-		//cout<<"THIRD PERSON CAM";
-		//float lx = 10;
-		//float ly = 50;
-		//float lz = 10;
-		//float lx = myFalcon.pos_x;
-		//float ly = myFalcon.pos_y + 10.0f;
-		//float lz = myFalcon.pos_z;
-		float lx = eyeX + 70.0f;
-		float ly = eyeY + 70.0f;
-		float lz = eyeZ;
-		gluLookAt(	
-			lx, ly, lz, //1.0f for ly before in example
-			//eyeX, eyeY + 10.0f, eyeZ,
-
-			//0,0,0,
-			lookX, lookY, lookZ,
-			//x+lx, 1.0f,  z+lz,
-			0.0f, 1.0f,  0.0f);
+	eyeZ = myFalcon.pos_z + myFalcon.forwardZ * -distance;
 
 
-		// RED LIGHT:
-		glPushMatrix();
-
-		GLfloat diffuse[] = {1,1,1,1}; //{1,1,1,1};//
-		GLfloat ambient_[] = {1,1,1,1}; //{.5,0,0,1}; 
-		GLfloat specular_[] = {1,1,1,1};
-		glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuse); 
-		glLightfv(GL_LIGHT2, GL_AMBIENT, ambient_); 
-		glLightfv(GL_LIGHT2, GL_SPECULAR, specular_); 
-
-		if(light2_isEnabled) {
-			glEnable(GL_LIGHT2); //enable the light
-		} else {
-			glDisable(GL_LIGHT2);
-		}
-
-		// set last term to 0 for a spotlight (see chp 5 in ogl prog guide) 
-		GLfloat lightpos[] = {lx,ly,lz,1.0f};//{lx*1.0f, ly*1.0f, lz*1.0f, 1.0f};//{3.0f, 15.0f, 0, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
-		glLightfv(GL_LIGHT2, GL_POSITION, lightpos);
-
-		//GLfloat directionVector[] = {-lx,-ly,-lz};//{0, -1.0f, 0}; // camera lookat point is the origin.
-		GLfloat directionVector[] = {myFalcon.pos_x-lx,myFalcon.pos_y-ly,myFalcon.pos_z-lz};//{0, -1.0f, 0}; // camera lookat point is the origin.
-		glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, directionVector);
-		glLightf(GL_LIGHT2, GL_SPOT_CUTOFF,180.0f);
-
-		glPopMatrix();
-
-		// END RED LIGHT.
-	}
+	gluLookAt(eyeX, eyeY, eyeZ,
+		lookX, lookY, lookZ,
+		0.0, 1.0, 0.0);
+=======
+>>>>>>> master
 }
 
 void renderScene(void) {
-	//glLoadIdentity();
+
+<<<<<<< HEAD
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+=======
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	terrain();
 	spotlight();
-
+>>>>>>> master
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glLoadIdentity();
+<<<<<<< HEAD
 	//gluLookAt(15.0, 15.0,	15.0,
-	//	0.0,	0.0,	0.0,
-	//	0.0f,	1.0f,	0.0f);	
+	//		  0.0,	0.0,	0.0,
+	//	      0.0f,	1.0f,	0.0f);	
 	updateCamera();
+=======
+	gluLookAt(15.0, 15.0,	15.0,
+		0.0,	0.0,	0.0,
+		0.0f,	1.0f,	0.0f);	
+>>>>>>> master
 
 	drawAxes();
 
@@ -778,9 +692,12 @@ void renderScene(void) {
 
 	glTranslatef(0, 4, 0);
 
+<<<<<<< HEAD
 
+	
 
-
+=======
+>>>>>>> master
 	glutSwapBuffers();
 }
 
@@ -803,16 +720,17 @@ void init(int argc, char **argv)
 
 	myFalcon = Falcon();
 
-
-	createSpotLight(0,0,0);// create spotlight
-	createRedLight(0.0f,1.0f,0.0f); // create main light
-
 }
 
 
 
+<<<<<<< HEAD
+=======
+	// create spotlight:
+	createSpotLight(0,0,0);
 
-
+}
+>>>>>>> master
 
 int main(int argc, char **argv) {
 	init(argc, argv);
@@ -821,19 +739,21 @@ int main(int argc, char **argv) {
 	// por registo de funcoes aqui
 	glutDisplayFunc(renderScene);
 	glutKeyboardFunc(keyboard);
-	glutSpecialFunc(processSpecialKeys);
 	//glutIdleFunc(renderScene);
 	glutReshapeFunc(changeSize);
 
 
+<<<<<<< HEAD
 	glutMouseFunc(mouseButton); // process mouse button push/release
 	glutMotionFunc(mouseMove); // process mouse dragging motion
+	
+
+	
 
 
 
-
-
-
+=======
+>>>>>>> master
 
 	glutMainLoop();
 
