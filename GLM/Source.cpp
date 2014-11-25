@@ -20,9 +20,17 @@ int yDragStart = 0;
 float deltaHeading = 0;
 float deltaPitch = 0;
 float distance = 10;
+
+bool ambientLight = true;
 GLfloat lightPos[4] = {0.0, 2.0 ,0.0, 1.0};
 GLfloat lightAmb[3] = {0.1, 0.1, 0.1};
 GLfloat lightDiff[3] = {1.0, 1.0, 1.0};
+
+//Ambient Light
+GLfloat lightPosA[4] = {0 ,20, 0, 0};
+GLfloat lightAmbA[3] = {1.0, 1.0, 1.0};
+GLfloat lightDiffA[3] = {1.0, 1.0, 1.0};
+GLfloat lightSpecA[3] = { 1.0 ,1.0, 1.0};
 
 Falcon myFalcon;
 
@@ -54,7 +62,7 @@ float angleExplosion = 0;
 int pilarsAreDrawn;
 
 // textures:
-//GLuint texture1;
+
 int displayList2;
 
 // ----------------------------------- functions -------------------------------------------------
@@ -156,6 +164,7 @@ void keyboard(unsigned char key, int xx, int yy) {
 	case't': isInWireFrameMode = !isInWireFrameMode; break;
 	case '1': isfirstPerson = true; break;
 	case '3': isfirstPerson = false; break;
+	case '4': ambientLight = !ambientLight;
 	case 'h' : isHighBeamMode = !isHighBeamMode; break;
 		//case 'p' : terrainTranslationConstant_X -= 5; break;
 		//case 'o' : terrainTranslationConstant_Z -= 5; break;
@@ -481,8 +490,7 @@ bool detectCollision(){
 
 void terrain(){
 
-	smoke();
-	sandStorm();
+
 
 	int height_[88][88] ={
 
@@ -762,7 +770,7 @@ void terrain(){
 		}
 	}
 	// now draw the vertices:
-	glEnable(GL_TEXTURE_2D);
+	//glEnable(GL_TEXTURE_2D);
 	glPushMatrix();
 	GLfloat mat_specular[] = {4.0, 2.0, 2.0, 1.0};
 	GLfloat mat_shininess[] = {50.0f};
@@ -776,12 +784,11 @@ void terrain(){
 	//glTranslatef(-64.0f,-2.0f,-44.0f);
 	for (int x = 1; x < MAP_SIZE-1; x++) { 
 		for (int z = 1; z < MAP_SIZE-1; z++) {
+
 			glBegin(GL_QUADS);
-			glBindTexture(GL_TEXTURE_2D, texture1);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			
 			//glColor3f(1.0f, 1.0f, 1.0f);
-			glColor3f(0.5f, 0.0f, 0.5f);
+			glColor3f(0.5f, 0.5f, 0.5f);
 			//glutSolidCube(height[x][z]);
 
 			//draw vertices:
@@ -900,13 +907,23 @@ void updateCamera() {
 void renderScene(void) {
 
 	glLoadIdentity();
-	glEnable(GL_TEXTURE_2D);
 
 		// draw falcon:
 
-	glLoadIdentity();
+
 	
 	updateCamera();
+	if (ambientLight){
+
+	glLightfv(GL_LIGHT6, GL_AMBIENT, lightAmbA);
+	glLightfv(GL_LIGHT6,GL_POSITION,lightPosA);
+	glLightfv(GL_LIGHT6, GL_DIFFUSE, lightDiffA);
+	glLightfv(GL_LIGHT6, GL_SPECULAR, lightSpecA);
+	glEnable(GL_COLOR_MATERIAL);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_LIGHT6);
+	}else{ glDisable(GL_LIGHT6);
+	}
 
 	if(isInWireFrameMode) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -914,7 +931,6 @@ void renderScene(void) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 	
-	//terrain();
 	spotlight();
 
 	// collision detection
@@ -926,6 +942,7 @@ void renderScene(void) {
 	else{
 		Smoke = false;
 	}
+	
 
 	// main light:
 	if(light0_isEnabled) {
@@ -946,12 +963,16 @@ void renderScene(void) {
 	//	0.0,	0.0,	0.0,
 	//	0.0f,	1.0f,	0.0f);	
 	//updateCamera();
-		//glLoadIdentity();
-	glEnable(GL_TEXTURE_2D);
+
+	/*glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, texture1);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	myFalcon.draw();
+	glDisable(GL_TEXTURE_2D);*/
+	
 
 	//drawAxes();
 
@@ -960,15 +981,16 @@ void renderScene(void) {
 	//glRotatef(rotX, 1.0, 0.0, 0.0);
 
 
-	//glBindTexture(GL_TEXTURE_2D, texture1);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
+	/*glBindTexture(GL_TEXTURE_2D, texture1);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+*/
 	
 	//Build the Height Map
 	//glLoadIdentity();
+	glDisable(GL_TEXTURE_2D);
 	terrain();
-
+	glEnable(GL_TEXTURE_2D);
 
 	//Display Fog
 	fog();
@@ -978,16 +1000,21 @@ void renderScene(void) {
 	//motion blur
 	motionBlur();
 
-	//smoke(); // now in terrain function
-	//sandStorm();
+	smoke();
+	sandStorm();
 
 	//1 way
-	glCallList(displayList2);
+	//glCallList(displayList2);
 
 	//glTranslatef(0, 4, 0);
 
 
-
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture1);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	myFalcon.draw();
+	glDisable(GL_TEXTURE_2D);
 
 
 	glutSwapBuffers();
@@ -1002,7 +1029,8 @@ void init(int argc, char **argv)
 	glutInitWindowSize(800, 600);
 	glutCreateWindow("Project");
 
-	glEnable(GL_TEXTURE_2D);
+
+
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
 
@@ -1011,13 +1039,15 @@ void init(int argc, char **argv)
 
 
 	myFalcon = Falcon();
-	Image* image = loadBMP("TieFighter.bmp");
+	Image* image = loadBMP("models/rock.bmp");
 	texture1 = loadTexture(image);
 
 	delete image;
 
 	createSpotLight(0,0,0);// create spotlight
 	createRedLight(0.0f,1.0f,0.0f); // create main light
+
+
 
 }
 
@@ -1034,7 +1064,6 @@ int main(int argc, char **argv) {
 	glutDisplayFunc(renderScene);
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(processSpecialKeys);
-	//glutIdleFunc(renderScene);
 	glutIdleFunc(renderScene);
 	glutReshapeFunc(changeSize);
 
