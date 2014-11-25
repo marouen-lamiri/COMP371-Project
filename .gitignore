@@ -181,4 +181,4 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
-GLM/GLM f16.vcxproj
+#GLM/GLM f16.vcxproj
