@@ -77,11 +77,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Falcon.cpp" />
     <ClCompile Include="glm.cpp" />
     <ClCompile Include="imageloader.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Falcon.h" />
     <ClInclude Include="glm.h" />
     <ClInclude Include="imageloader.h" />
   </ItemGroup>

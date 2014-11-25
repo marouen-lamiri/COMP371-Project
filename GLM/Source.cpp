@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <GL/glut.h>
 #include "imageloader.h"
-#include "glm.h"
+#include "Falcon.h"
 
-#define PI 3.1416
+#define PI 3.141592
 
 // variaveis
 float x=0, y=0, z=0, rotX=0;
@@ -12,12 +12,21 @@ int fps=0, displayList=0;
 bool displayFog = false;
 bool displayMotionBlur = false;
 
+// Mouse drag control
+int isDragging = 0; // true when dragging
+int xDragStart = 0; // records the x-coordinate when dragging starts
+int yDragStart = 0;
+float deltaHeading = 0;
+float deltaPitch = 0;
+float distance = 10;
 GLfloat lightPos[4] = {0.0, 2.0 ,0.0, 1.0};
 GLfloat lightAmb[3] = {0.1, 0.1, 0.1};
 GLfloat lightDiff[3] = {1.0, 1.0, 1.0};
 
-GLMmodel* mymodel1;
-GLMmodel* mymodel2;
+Falcon myFalcon;
+
+//GLMmodel* mymodel1;
+
 
 GLuint texture1;
 
@@ -27,7 +36,7 @@ void keyboard(unsigned char key, int xx, int yy) {
 		case 'a' : x-=2; break; 
 		case 'd' : x+=2; break; 
 		case 's' : z+=2; break; 
-		case 'w' : z-=2; break; 
+		case 'w' : myFalcon.moveForward(); break; 
 		case '.' : y-=2; break; 
 		case ',' : y+=2; break; 
 		case 'k' : rotX-=2.0; break; 
@@ -49,6 +58,34 @@ void keyboard(unsigned char key, int xx, int yy) {
 			}
 			break; 
 		case 27  : exit(0);
+	}
+}
+void mouseMove(int x, int y)
+{
+	if (isDragging) { // only when dragging
+		// update the change in angle
+		deltaHeading = ((x - xDragStart) * 0.02);
+		deltaPitch = ((y - yDragStart) * 0.02);
+		myFalcon.heading -= deltaHeading; // update camera turning angle
+		myFalcon.pitch += deltaPitch;
+
+
+		
+	}
+}
+void mouseButton(int button, int state, int x, int y)
+{
+	if (button == GLUT_RIGHT_BUTTON) {
+		if (state == GLUT_DOWN) { // left mouse button pressed
+			isDragging = 1; // start dragging
+			xDragStart = x; // save x where button first pressed
+			yDragStart = y;	//save y where button first pressed
+		}
+		else  { /* (state = GLUT_UP) */
+			myFalcon.heading -= deltaHeading; // update camera turning angle
+			myFalcon.pitch += deltaPitch ;
+			isDragging = 0; // no longer dragging
+		}
 	}
 }
 
@@ -335,16 +372,32 @@ void terrain(){
     glPopMatrix();
 }
 
+void updateCamera(){
+	//look at Millenium falcon at all times
+	float lookX = myFalcon.pos_x;
+	float lookY = myFalcon.pos_y;
+	float lookZ = myFalcon.pos_z;
+	//camera position
+	float eyeX;
+	float eyeY;
+	float eyeZ;
+
+
+	gluLookAt(15.0, 15.0, 15.0,
+		lookX, lookY, lookZ,
+		0.0, 1.0, 0.0);
+}
+
 void renderScene(void) {
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	glLoadIdentity();
-	gluLookAt(15.0, 15.0,	15.0,
-			  0.0,	0.0,	0.0,
-		      0.0f,	1.0f,	0.0f);	
-	
+	//gluLookAt(15.0, 15.0,	15.0,
+	//		  0.0,	0.0,	0.0,
+	//	      0.0f,	1.0f,	0.0f);	
+	updateCamera();
 	drawAxes();
 
 	glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmb);
@@ -363,15 +416,11 @@ void renderScene(void) {
 	//Display Fog
 	fog();
 
-	//1 way
-	glCallList(displayList);
+	myFalcon.draw();
 	
-
-	glTranslatef(0, 4, 0);
-	
-
 	glutSwapBuffers();
 }
+
 
 void init(int argc, char **argv)
 {
@@ -388,25 +437,13 @@ void init(int argc, char **argv)
 	glEnable(GL_LIGHT0);
 	glEnable(GL_COLOR_MATERIAL);
 
-	//Load model
-	mymodel1 = glmReadOBJ("3dFalconFINAL.obj");
 
-	//There are for preparing our model
-	glmUnitize(mymodel1);
-	glmFacetNormals(mymodel1);
-	glmVertexNormals(mymodel1, 90);
-
-	displayList=glGenLists(1);
-	glNewList(displayList,GL_COMPILE);
-	glmDraw(mymodel1, GLM_SMOOTH | GLM_MATERIAL | GLM_TEXTURE);
-	glEndList();
-
-	//Loads corresponding texture
-	//Image* image = loadBMP("models/rock.bmp");
-	//texture1 = loadTexture(image);
-	//delete image;
+	myFalcon = Falcon();
 
 }
+
+
+
 
 int main(int argc, char **argv) {
 	init(argc, argv);
@@ -417,7 +454,8 @@ int main(int argc, char **argv) {
 	glutKeyboardFunc(keyboard);
 	//glutIdleFunc(renderScene);
 	glutReshapeFunc(changeSize);
-	
+	glutMouseFunc(mouseButton); // process mouse button push/release
+	glutMotionFunc(mouseMove); // process mouse dragging motion
 	
 	
 	glutMainLoop();
