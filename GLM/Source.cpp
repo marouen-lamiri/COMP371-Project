@@ -25,6 +25,7 @@ GLfloat lightPos[4] = {0.0, 2.0 ,0.0, 1.0};
 GLfloat lightAmb[3] = {0.1, 0.1, 0.1};
 GLfloat lightDiff[3] = {1.0, 1.0, 1.0};
 bool wire, Smoke, sand;
+int displayList2;
 int MAP_SIZE = 88;
 int height[88][88] = {
 
@@ -225,6 +226,7 @@ Falcon myFalcon;
 
 GLuint texture1;
 GLuint texture2;
+GLuint texture3;
 
 void keyboard(unsigned char key, int xx, int yy) {
 	glutPostRedisplay();
@@ -527,8 +529,11 @@ void renderScene(void) {
 	motionBlur();
 
 	//1 way
+	glBindTexture(GL_TEXTURE_2D, texture3);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	
-	glCallList(displayList);
+	glCallList(displayList2);
 	
 	glTranslatef(0, 4, 0);
 
@@ -559,7 +564,21 @@ void init(int argc, char **argv)
 
 	image = loadBMP("Metal.bmp");
 	texture2 = loadTexture(image);
+
+	image = loadBMP("TieFighter.bmp");
+	texture3 = loadTexture(image);
 	delete image;
+
+	GLMmodel* TieFighter = glmReadOBJ("TieFighter.obj");
+	glmUnitize(TieFighter);
+	glmFacetNormals(TieFighter);
+	glmVertexNormals(TieFighter, 90);
+
+	displayList2 = glGenLists(1);
+	glNewList(displayList2, GL_COMPILE);
+	glmDraw(TieFighter, GLM_SMOOTH | GLM_MATERIAL | GLM_TEXTURE);
+	glEndList();
+
 
 }
 
