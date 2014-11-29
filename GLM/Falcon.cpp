@@ -7,7 +7,7 @@ Falcon::Falcon()
 	//rotation
 	roll = 0;
 	pitch = 0;
-	heading = 0;
+	heading = 180;
 
 	//Position
 	pos_x = 0;
