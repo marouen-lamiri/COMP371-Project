@@ -68,6 +68,9 @@ int height[88][88];
 bool sand = false;
 float angleExplosion = 0;
 int pilarsAreDrawn;
+bool originHasPillar = false;
+int pillarHeight = 100;
+
 
 // textures:
 
@@ -446,6 +449,10 @@ bool detectCollision(){
 		if (height[x][z] >= y){
 			return true;
 		}
+		// for collision with pillars:
+		if(originHasPillar && y <= pillarHeight + 100.0f) {
+			return true;
+		}
 	}
 	return false;
 
@@ -601,16 +608,28 @@ void terrain(){
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 				glTranslatef(x,height[x][z],z);
 				glScalef(1.0f, 10.0f, 1.0f);
-				glTexCoord2f(0.0f, 0.0f);glTexCoord2f(1.0f, 0.0f);glTexCoord2f(0.0f, 1.0f);glTexCoord2f(1.0f, 1.0f);glutSolidCube(1);
+				glTexCoord2f(0.0f, 0.0f);glTexCoord2f(1.0f, 0.0f);glTexCoord2f(0.0f, 1.0f);glTexCoord2f(1.0f, 1.0f);
+				glutSolidCube(1);
 				glPopMatrix();
 				pilarsAreDrawn = 10;
+				// this is a boolean for collision detection of pillars: is the ship above a pillar?
+				if (x==(int)myFalcon.pos_x && z==(int)myFalcon.pos_z) { // if we're at the origin:
+					originHasPillar = true;
+					pillarHeight = 10.0f;
+				} 
+			} 
+			// is the ship NOT above a pillar?
+			else if (x==(int)myFalcon.pos_x && z==(int)myFalcon.pos_z) {
+				// if we're at the origin, but we're not over a pillar:
+				originHasPillar = false;
 			}
 
 		}
 	}
 
 	pilarsAreDrawn--;
-	glPopMatrix();
+
+	glPopMatrix(); // end drawing vertices
 }
 
 void updateCamera() {
