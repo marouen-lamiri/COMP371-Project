@@ -34,20 +34,10 @@ float deltaPitch = 0;
 float distance = 20;
 
 bool ambientLight = true;
-GLfloat lightPos[4] = {0.0, 2.0 ,0.0, 1.0};
-GLfloat lightAmb[3] = {0.1, 0.1, 0.1};
-GLfloat lightDiff[3] = {1.0, 1.0, 1.0};
-
-//Ambient Light
-GLfloat lightPosA[4] = {0 ,20, 0, 0};
-GLfloat lightAmbA[3] = {1.0, 1.0, 1.0};
-GLfloat lightDiffA[3] = {1.0, 1.0, 1.0};
-GLfloat lightSpecA[3] = { 1.0 ,1.0, 1.0};
 
 Falcon myFalcon;
 
 //GLMmodel* mymodel1;
-
 
 GLuint texture1;
 GLuint texture2;
@@ -68,12 +58,6 @@ int terrainTranslationConstant_Z = 44;
 
 bool isInWireFrameMode = false;
 bool isfirstPerson = true;
-//float helicopterPositionX = 0;
-//float helicopterPositionY = 0;
-//float helicopterPositionZ = 0;
-bool light0_isEnabled = false;
-bool light1_isEnabled = true;//true;
-bool light2_isEnabled = true;
 bool isHighBeamMode = true;
 int frameCounter = 0;
 int isRotatingLeft;
@@ -205,7 +189,6 @@ void sandStorm()
 	}
 }
 
-
 /* perlin noise functions: */
 inline double findnoise2(double x,double y) {
 	int n=(int)x+(int)y*57;
@@ -248,13 +231,6 @@ void keyboard(unsigned char key, int xx, int yy) {
 	case '3': isfirstPerson = false; break;
 	case '4': ambientLight = !ambientLight;
 	case 'h' : isHighBeamMode = !isHighBeamMode; break;
-		//case 'p' : terrainTranslationConstant_X -= 5; break;
-		//case 'o' : terrainTranslationConstant_Z -= 5; break;
-		//case 'a' : x-=2; break; 
-		//case 'd' : x+=2; break; case
-		//case 's' : z+=2; break; 
-		//case 'w' : myFalcon.moveForward(); break; 
-		//case 'w' : z-=2; break; 
 	case 'a' : myFalcon.pos_x += 1; break; 
 	case 'd' : myFalcon.pos_x -= 1; break; 
 	case 'w' : myFalcon.pos_z += 1; break; 
@@ -280,33 +256,6 @@ void keyboard(unsigned char key, int xx, int yy) {
 		}
 		break; 
 	case 27  : exit(0);
-		//=======
-		//	case 'a' : x-=2; break; 
-		//	case 'd' : x+=2; break; 
-		//	case 's' : z+=2; break; 
-		//	case 'w' : z-=2; break; 
-		//	case '.' : y-=2; break; 
-		//	case ',' : y+=2; break; 
-		//	case 'k' : rotX-=2.0; break; 
-		//	case 'i' : rotX+=2.0; break; 
-		//	case 'm' : 
-		//		if(displayMotionBlur){
-		//			displayMotionBlur = false;
-		//		}
-		//		else {
-		//			displayMotionBlur = true;
-		//		}
-		//		break; 
-		//	case 'f' : 
-		//		if(displayFog){
-		//			displayFog = false;
-		//		}
-		//		else {
-		//			displayFog = true;
-		//		}
-		//		break; 
-		//	case 27  : exit(0);
-		//>>>>>>> c4271f11939f4239f54be03a68d0736b68fd4215
 	}
 }
 
@@ -317,28 +266,19 @@ void processSpecialKeys(int key, int xx, int yy) {
 
 	switch (key) {
 	case GLUT_KEY_F1:
-		light0_isEnabled = ! light0_isEnabled;
+		
 		break;
 	case GLUT_KEY_F2:
-		light1_isEnabled = ! light1_isEnabled;
+		
 		break;
 	case GLUT_KEY_F3:
-		light2_isEnabled = ! light2_isEnabled;
+		
 		break;
-		//case GLUT_KEY_F4:
-		//	isMetalAppearance = ! isMetalAppearance;
-		//	break;
-		//case GLUT_KEY_F5:
-		//	//texturesIsEnabled = ! texturesIsEnabled;
-		//	isTextureNumber++;
-		//	isTextureNumber = isTextureNumber % 5;
-		//	break;
+		
 	case GLUT_KEY_LEFT :
-		//terrainTranslationConstant_X -= 5;
 		isRotatingLeft = 5;
 		break;
 	case GLUT_KEY_RIGHT :
-		//terrainTranslationConstant_X += 5;
 		isRotatingRight = 5;
 		break;
 	case GLUT_KEY_UP :
@@ -398,15 +338,11 @@ void changeSize(int w, int h) {
 void drawAxes()
 {
 	glPushMatrix();
-	GLboolean isEnabled = false;
-	glGetBooleanv(GL_LIGHTING, &isEnabled); /* To restore this lighting later */
-	glDisable(GL_LIGHTING);
 	glLineWidth(2);
 	glBegin(GL_LINES);
 	glColor3f(1.0, 0.0, 0.0);
 	glVertex3f(0.0, 0.0, 0.0);
 	glVertex3f(2.0, 0.0, 0.0);
-
 
 	glColor3f(0.0, 1.0, 0.0);
 	glVertex3f(0.0, 0.0, 0.0);
@@ -418,8 +354,6 @@ void drawAxes()
 	glColor3f(1.0, 1.0, 1.0);
 	glEnd();
 
-	if(isEnabled)
-		glEnable(GL_LIGHTING);
 	glPopMatrix();
 }
 
@@ -452,106 +386,32 @@ void fog(){
 
 
 /* spotlight functions: */
-void createSpotLight(float positionX, float positionY, float positionZ)
-{
-	GLfloat specular[] = {1.0, 1.0, 1.0, 1.0};
-	GLfloat shininess[] = {50.0};
-	//myFalcon.pos_x , myFalcom.pos_y, myFalcon.pos_z;
-	//GLfloat position[] = {myFalcon.pos_x, myFalcon.pos_y, myFalcon.pos_z+5.0f, 1.0};
-	GLfloat position[] = {0, 0, 5.0f, 1.0f};
-	GLfloat color[4] = { 1.0f, 1.0f, 1.0f, 1.0f};
-	GLfloat diffuse[] = {1.0, 1.0, 1.0, 1.0};
-
-	//GLfloat diffuse_blueLight[] = {1,1,1,1}; 
-	//GLfloat ambient_blueLight[] = {1,1,1,1}; //{.5,0,0,1}; 
-	//GLfloat specular_blueLight[] = {1,1,1,1}; 
-	//glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse_blueLight); 
-	//glLightfv(GL_LIGHT1, GL_AMBIENT, ambient_blueLight); 
-	//glLightfv(GL_LIGHT1, GL_SPECULAR, specular_blueLight); 
-
-	glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse);
-
-	glLightfv(GL_LIGHT1,GL_SPECULAR,specular);//GL_LIGHT0
-	glLightfv(GL_LIGHT1,GL_POSITION,position);
-	glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,180.0f);//50.0f);
-	glLightf(GL_LIGHT1,GL_SPOT_EXPONENT,2.0f);
-	glLightfv(GL_LIGHT1, GL_DIFFUSE, color);
-	glEnable(GL_COLOR_MATERIAL);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_LIGHT1);
+void createSpotLight(float positionX, float positionY, float positionZ){
+	
 }
 
 void spotlight() {
-
-	// SPOTLIGHT 
-
-	glPushMatrix();
-
-	if(light1_isEnabled) {
-		glEnable(GL_LIGHT1); //enable the light
-	} else {
-		glDisable(GL_LIGHT1);
-	}
-	// set last term to 0 for a spotlight (see chp 5 in ogl prog guide) 
-	//myFalcon.pos_x , myFalcom.pos_y, myFalcon.pos_z;
-	//GLfloat lightpos_blueLight[] = {mymodel1.pos_x+2.0f, 0, mymodel1.pos_z, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
-	//GLfloat lightpos_blueLight[] = {0+2.0f, 0, 0, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
-	GLfloat lightpos_blueLight[] = {myFalcon.pos_x, myFalcon.pos_y + 10.0f, myFalcon.pos_z, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
-	glLightfv(GL_LIGHT1,GL_POSITION, lightpos_blueLight); 
-
-	float neg;
-	if(pilarsAreDrawn > 0) {
-		neg = -1.0f;
-	}
-
-	if(isHighBeamMode){
-		glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,90.0f);
-		//GLfloat directionVector_blueLight[] = {3.0f, -10.0f, 0};
-		//GLfloat directionVector_blueLight[] = {myFalcon.pos_x - lightpos_blueLight[0], myFalcon.pos_y - lightpos_blueLight[1], myFalcon.pos_z - lightpos_blueLight[2]};
-		GLfloat directionVector_blueLight[] = {(myFalcon.pos_x - lightpos_blueLight[0])*neg, myFalcon.pos_y - lightpos_blueLight[1], (myFalcon.pos_z - lightpos_blueLight[2])*neg};
-		//GLfloat directionVector_blueLight[] = {(10.0f), -10.0f, 10.0f};
-		glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, directionVector_blueLight);
-	} else {
-		glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,40.0f);
-		//GLfloat directionVector_blueLight[] = {1.0f, -10.0f, 0};
-		//GLfloat directionVector_blueLight[] = {myFalcon.pos_x - lightpos_blueLight[0], myFalcon.pos_y - lightpos_blueLight[1] - 10.0f, myFalcon.pos_z - lightpos_blueLight[2]};
-		GLfloat directionVector_blueLight[] = {(myFalcon.pos_x - lightpos_blueLight[0])*neg, myFalcon.pos_y - lightpos_blueLight[1] - 10.0f, (myFalcon.pos_z - lightpos_blueLight[2])*neg};
-		//GLfloat directionVector_blueLight[] = {(10.0f), - 10.0f, 10.0f};
-		glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, directionVector_blueLight);
-	}
-
-	glPopMatrix();
+	//Select position of light and material characteristics
+	GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1.0};
+	GLfloat mat_shininess[] = {50.0};
+	GLfloat light_position[] = {myFalcon.pos_x,myFalcon.pos_y, myFalcon.pos_z,1.0};
+	GLfloat spotDir[] = {2.0 + myFalcon.pos_x,myFalcon.pos_y,1.0 + myFalcon.pos_z};
+	GLfloat color[4] = { 0.0f, 1.0f, 1.0f, 1.0f};
+	glShadeModel (GL_SMOOTH);
+	glLightfv(GL_LIGHT0,GL_SPECULAR,mat_specular);
+	glLightfv(GL_LIGHT0,GL_POSITION,light_position);
+	// Definig spotlight attributes
+	glLightf(GL_LIGHT0,GL_SPOT_CUTOFF,45);
+	glLightf(GL_LIGHT0,GL_SPOT_EXPONENT,2.0f);
+	glLightfv(GL_LIGHT0,GL_SPOT_DIRECTION,spotDir);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, color);
+	glEnable(GL_COLOR_MATERIAL);
+	glEnable(GL_DEPTH_TEST);
 }
 /* spotlight functions: */
 
-void createRedLight(float positionX, float positionY, float positionZ)
-{
-	GLfloat specular[] = {1.0, 1.0, 1.0, 1.0};
-	GLfloat shininess[] = {50.0};
-	//GLfloat position[] = {helicopterPositionX, helicopterPositionY, helicopterPositionZ+5.0f, 1.0};
-	GLfloat position[] = {0, 20.0f, 0, 1.0};
-	GLfloat color[4] = { 1.0f, 1.0f, 1.0f, 1.0f};
-	//GLfloat diffuse[] = {1.0, 1.0, 1.0, 1.0};
-	//GLfloat diffuse[] = {0.0, 0.0, 0.0, 1.0};
-	//glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuse);
+void createRedLight(float positionX, float positionY, float positionZ){
 
-	GLfloat diffuse[] = {0,0,0,1};//{1,1,1,1}; //{1,1,1,1};//
-	GLfloat ambient_[] = {0,0,0,1};//{1,1,1,1}; //{.5,0,0,1}; 
-	GLfloat specular_[] = {1,1,1,1};
-	glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuse); 
-	glLightfv(GL_LIGHT2, GL_AMBIENT, ambient_); 
-	glLightfv(GL_LIGHT2, GL_SPECULAR, specular_); 
-
-
-	//glShadeModel (GL_SMOOTH);
-	glLightfv(GL_LIGHT2,GL_SPECULAR,specular);//GL_LIGHT0
-	glLightfv(GL_LIGHT2,GL_POSITION,position);
-	glLightf(GL_LIGHT2,GL_SPOT_CUTOFF,50.0f);
-	glLightf(GL_LIGHT2,GL_SPOT_EXPONENT,2.0f);
-	glLightfv(GL_LIGHT2, GL_DIFFUSE, color);
-	glEnable(GL_COLOR_MATERIAL);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_LIGHT2);
 }
 
 
@@ -755,16 +615,6 @@ void updateCamera() {
 
 	// Set the camera
 	if(isfirstPerson) {
-
-		//cout<<"FIRST PERSON CAM";
-		//glRotatef(90,0.0,1.0,0.0);		
-		//gluLookAt(
-		//	helicopterPositionX, helicopterPositionY, helicopterPositionZ+5.0f, //1.0f for ly before in example
-		//	helicopterPositionX+2.0f, helicopterPositionY, helicopterPositionZ+2.0f,
-		//	//x+lx, 1.0f,  z+lz,
-		//	0.0f, 1.0f,  0.0f);
-		//glRotatef(-90,0.0,1.0,0.0);	
-		//glLoadIdentity();
 		gluLookAt(
 			eyeX, eyeY, eyeZ,
 			lookX, lookY, lookZ,
@@ -772,17 +622,9 @@ void updateCamera() {
 
 	} else {
 
-		//cout<<"THIRD PERSON CAM";
-		//float lx = 10;
-		//float ly = 50;
-		//float lz = 10;
-		//float lx = myFalcon.pos_x;
-		//float ly = myFalcon.pos_y + 10.0f;
-		//float lz = myFalcon.pos_z;
 		float lx = eyeX + 70.0f;
 		float ly = eyeY + 70.0f;
 		float lz = eyeZ + 40.0f;
-		//glLoadIdentity();
 		gluLookAt(	
 			lx, ly, lz, //1.0f for ly before in example
 			//eyeX, eyeY + 10.0f, eyeZ,
@@ -794,27 +636,7 @@ void updateCamera() {
 
 
 		// RED LIGHT:
-		glPushMatrix();
-
-		if(light2_isEnabled) {
-			glEnable(GL_LIGHT2); //enable the light
-		} else {
-			glDisable(GL_LIGHT2);
-		}
-
-		// set last term to 0 for a spotlight (see chp 5 in ogl prog guide) 
-		GLfloat lightpos[] = {lx,ly,lz,1.0f};//{lx*1.0f, ly*1.0f, lz*1.0f, 1.0f};//{3.0f, 15.0f, 0, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
-		glLightfv(GL_LIGHT2, GL_POSITION, lightpos);
-
-		//GLfloat directionVector[] = {-lx,-ly,-lz};//{0, -1.0f, 0}; // camera lookat point is the origin.
-		//GLfloat directionVector[] = {myFalcon.pos_x-lx,myFalcon.pos_y-ly,myFalcon.pos_z-lz};//{0, -1.0f, 0}; // camera lookat point is the origin.
-		GLfloat directionVector[] = {0,-10.0f,0};//{0, -1.0f, 0}; // camera lookat point is the origin.
-		glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, directionVector);
-		glLightf(GL_LIGHT2, GL_SPOT_CUTOFF,180.0f);
-
-		glPopMatrix();
-
-		// END RED LIGHT.
+		//glPushMatrix();
 	}
 	//glPopMatrix();
 }
@@ -831,17 +653,7 @@ void renderScene(void) {
 
 	
 	updateCamera();
-	if (ambientLight){
-
-	glLightfv(GL_LIGHT6, GL_AMBIENT, lightAmbA);
-	glLightfv(GL_LIGHT6,GL_POSITION,lightPosA);
-	glLightfv(GL_LIGHT6, GL_DIFFUSE, lightDiffA);
-	glLightfv(GL_LIGHT6, GL_SPECULAR, lightSpecA);
-	glEnable(GL_COLOR_MATERIAL);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_LIGHT6);
-	}else{ glDisable(GL_LIGHT6);
-	}
+	
 
 	if(isInWireFrameMode) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -864,37 +676,11 @@ void renderScene(void) {
 	}
 	
 
-	// main light:
-	if(light0_isEnabled) {
-		glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
-		glEnable(GL_LIGHT0);
-		glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmb);
-		glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiff);
-	} else {
-		glDisable(GL_LIGHT0);
-	}
 
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	///glLoadIdentity();
-	//gluLookAt(15.0, 15.0,	15.0,
-	//	0.0,	0.0,	0.0,
-	//	0.0f,	1.0f,	0.0f);	
-	//updateCamera();
-
-	
-
-	//drawAxes();
-
-
-	//glTranslatef(x,y,z);
-	//glRotatef(rotX, 1.0, 0.0, 0.0);
-
-	
-	//Build the Height Map
-	//glLoadIdentity();
 	terrain();
 
 	//Display Fog
@@ -907,11 +693,6 @@ void renderScene(void) {
 
 	//smoke();
 	sandStorm();
-
-	//1 way
-	//glCallList(displayList2);
-
-	//glTranslatef(0, 4, 0);
 
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, texture1);
@@ -974,31 +755,10 @@ void renderScene(void) {
 					particle[loop].g = colors[col][1];            // Select Green From Color Table
 					particle[loop].b = colors[col][2];            // Select Blue From Color Table
 				}
-				//// If Number Pad 8 And Y Gravity Is Less Than 1.5 Increase Pull Upwards
-				//if (keys[VK_NUMPAD8] && (particle[loop].yg<1.5f)) particle[loop].yg += 0.01f;
-				//// If Number Pad 2 And Y Gravity Is Greater Than -1.5 Increase Pull Downwards
-				//if (keys[VK_NUMPAD2] && (particle[loop].yg>-1.5f)) particle[loop].yg -= 0.01f;
-				//// If Number Pad 6 And X Gravity Is Less Than 1.5 Increase Pull Right
-				//if (keys[VK_NUMPAD6] && (particle[loop].xg<1.5f)) particle[loop].xg += 0.01f;
-				//// If Number Pad 4 And X Gravity Is Greater Than -1.5 Increase Pull Left
-				//if (keys[VK_NUMPAD4] && (particle[loop].xg>-1.5f)) particle[loop].xg -= 0.01f;
-
-				//if (keys[VK_TAB])                       // Tab Key Causes A Burst
-				//{
-				//	particle[loop].x = 0.0f;                  // Center On X Axis
-				//	particle[loop].y = 0.0f;                  // Center On Y Axis
-				//	particle[loop].z = 0.0f;                  // Center On Z Axis
-				//	particle[loop].xi = float((rand() % 50) - 26.0f)*10.0f;   // Random Speed On X Axis
-				//	particle[loop].yi = float((rand() % 50) - 25.0f)*10.0f;   // Random Speed On Y Axis
-				//	particle[loop].zi = float((rand() % 50) - 25.0f)*10.0f;   // Random Speed On Z Axis
-				//}
 			}
 		}
 		glDisable(GL_TEXTURE_2D);
 	}
-
-
-
 
 	glutSwapBuffers();
 }
@@ -1014,7 +774,6 @@ void init(int argc, char **argv)
 	glutCreateWindow("Project");
 
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_LIGHTING);
 
 	glEnable(GL_COLOR_MATERIAL);
 
@@ -1053,9 +812,6 @@ void init(int argc, char **argv)
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, image->width, image->height, 0, GL_RGB, GL_UNSIGNED_BYTE, image->pixels);
 	delete image;
 	
-
-	createSpotLight(0,0,0);// create spotlight
-	createRedLight(0.0f,1.0f,0.0f); // create main light
 }
 
 int main(int argc, char **argv) {
