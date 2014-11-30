@@ -306,10 +306,14 @@ void processSpecialKeys(int key, int xx, int yy) {
 		isRotatingRight = 5;
 		break;
 	case GLUT_KEY_UP :
-		myFalcon.pos_y += 1.0f;
+		if(myFalcon.pos_y <= 10.0f) {
+			myFalcon.pos_y += 1.0f; 
+		}
 		break;
 	case GLUT_KEY_DOWN :
-		myFalcon.pos_y -= 1.0f;
+		if(myFalcon.pos_y >= -5.0f) {
+			myFalcon.pos_y -= 1.0f;
+		}
 		break;
 	}
 }
@@ -594,7 +598,7 @@ void terrain(){
 			//// place some pilars on the landscape:
 			////if(x % 20 == 0) {
 			if(height[x+1][z] > 3.95f) {// && z % 20 == 0) {	// we never get landscape above 4.0f with current params	
-				
+
 				//glPushMatrix();
 				glBindTexture(GL_TEXTURE_2D, texture7);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
