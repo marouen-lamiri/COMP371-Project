@@ -108,6 +108,27 @@ static GLfloat colors[12][3] =               // Rainbow Of Colors
 
 // ----------------------------------- functions -------------------------------------------------
 
+
+void createSpotLight(float positionX, float positionY, float positionZ)
+{
+	GLfloat specular[] = {1.0, 1.0, 1.0, 1.0};
+	GLfloat shininess[] = {50.0};
+	GLfloat position[] = {0, 0, 5.0f, 1.0};
+	GLfloat color[4] = { 0.0f, 1.0f, 1.0f, 1.0f};
+	GLfloat diffuse[] = {1.0, 1.0, 1.0, 1.0};
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
+
+	glLightfv(GL_LIGHT0,GL_SPECULAR,specular);//GL_LIGHT0
+	glLightfv(GL_LIGHT0,GL_POSITION,position);
+	glLightf(GL_LIGHT0,GL_SPOT_CUTOFF,50.0f);
+	glLightf(GL_LIGHT0,GL_SPOT_EXPONENT,2.0f);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, color);
+	glEnable(GL_COLOR_MATERIAL);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHTING);
+}
+
 void smoke(){
 	if(Smoke){
 
@@ -266,15 +287,15 @@ void processSpecialKeys(int key, int xx, int yy) {
 
 	switch (key) {
 	case GLUT_KEY_F1:
-		
+
 		break;
 	case GLUT_KEY_F2:
-		
+
 		break;
 	case GLUT_KEY_F3:
-		
+
 		break;
-		
+
 	case GLUT_KEY_LEFT :
 		isRotatingLeft = 5;
 		break;
@@ -385,10 +406,10 @@ void fog(){
 }
 
 
-/* spotlight functions: */
-void createSpotLight(float positionX, float positionY, float positionZ){
-	
-}
+///* spotlight functions: */
+//void createSpotLight(float positionX, float positionY, float positionZ){
+//	
+//}
 
 void spotlight() {
 	//Select position of light and material characteristics
@@ -432,7 +453,7 @@ bool detectCollision(){
 
 void terrain(){
 
-	
+
 
 	//int MAP_SIZE = 88; // now a global
 	//int MAP_SIZE = 10;
@@ -521,7 +542,7 @@ void terrain(){
 	}
 	// now draw the vertices:
 	glPushMatrix();
-	
+
 	GLfloat mat_specular[] = {4.0, 2.0, 2.0, 1.0};
 	GLfloat mat_shininess[] = {50.0f};
 	glShadeModel (GL_SMOOTH);
@@ -557,13 +578,13 @@ void terrain(){
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			glBegin(GL_QUADS);
-			
+
 			//glColor3f(1.0f, 1.0f, 1.0f);
 			glColor3f(0.5f, 0.5f, 0.5f);
 			//glutSolidCube(height[x][z]);
 
 			//draw vertices:
-			
+
 			glTexCoord2f(0.0f, 0.0f); glVertex3f(x,height[x][z],z);
 			glTexCoord2f(1.0f, 0.0f); glVertex3f(x+1,height[x+1][z],z);
 			glTexCoord2f(0.0f, 1.0f); glVertex3f(x+1,height[x+1][z+1],z + 1);
@@ -584,7 +605,7 @@ void terrain(){
 				glPopMatrix();
 				pilarsAreDrawn = 10;
 			}
-			
+
 		}
 	}
 
@@ -642,31 +663,69 @@ void updateCamera() {
 }
 
 void renderScene(void) {
-	
-	
+
+
 
 
 	glLoadIdentity();
 
-		// draw falcon:
+	// draw falcon:
 	glEnable(GL_TEXTURE_2D);
 
-	
+
 	updateCamera();
-	
+
+
+
+
+
+
+
+
 
 	if(isInWireFrameMode) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	} else {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
-	
-	spotlight();
+
+	//spotlight();
+
+
+
+	// SPOTLIGHT 
+	glPushMatrix();
+	//createSpotLight(0,0,0);
+	if(true) {//light0_isEnabled
+		glEnable(GL_LIGHT0); //enable the light
+	} else {
+		glDisable(GL_LIGHT0);
+	}
+	// set last term to 0 for a spotlight (see chp 5 in ogl prog guide) 
+	//GLfloat lightpos_blueLight[] = {myFalcon.pos_x+2.0f, myFalcon.pos_y + 10.0f, myFalcon.pos_z+2.0f, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
+	GLfloat lightpos_blueLight[] = {2.0f, 10.0f, 2.0f, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
+	glLightfv(GL_LIGHT0,GL_POSITION, lightpos_blueLight); 
+
+	GLfloat diffuse_blueLight[] = {1,1,1,1}; 
+	GLfloat ambient_blueLight[] = {1,1,1,1}; //{.5,0,0,1}; 
+	GLfloat specular_blueLight[] = {1,1,1,1}; 
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse_blueLight); 
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient_blueLight); 
+	glLightfv(GL_LIGHT0, GL_SPECULAR, specular_blueLight); 
+
+	glLightf(GL_LIGHT0,GL_SPOT_CUTOFF,180.0f);
+	GLfloat directionVector_blueLight[] = {4.0f, -10.0f, 0};
+	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, directionVector_blueLight);
+
+	glPopMatrix();// end SPOTLIGHT 
+
+
+
 
 	// collision detection
 
 	if (detectCollision()){
-		
+
 		Smoke = true;
 		explode();
 		std::cout << "collision Detected";
@@ -674,7 +733,7 @@ void renderScene(void) {
 	else{
 		Smoke = false;
 	}
-	
+
 
 
 
@@ -766,7 +825,7 @@ void renderScene(void) {
 
 void init(int argc, char **argv)
 {
-	
+
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(100, 100);
@@ -805,13 +864,15 @@ void init(int argc, char **argv)
 	image = loadBMP("explosion.bmp");
 	texture9 = loadTexture(image);
 
-	
+
 	glBindTexture(GL_TEXTURE_2D, texture9);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, image->width, image->height, 0, GL_RGB, GL_UNSIGNED_BYTE, image->pixels);
 	delete image;
-	
+
+	createSpotLight(0,0,0);
+
 }
 
 int main(int argc, char **argv) {
