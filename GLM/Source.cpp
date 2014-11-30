@@ -15,7 +15,7 @@ float x=0, y=0, z=0, rotX=0;
 int fps=0, displayList=0;
 bool displayFog = false;
 bool displayMotionBlur = false;
-bool    rainbow = true;           // Rainbow Mode?    ( ADD )
+bool rainbow = true;           // Rainbow Mode?    ( ADD )
 time_t explosionStart;
 time_t currentTime;
 
@@ -36,8 +36,6 @@ float distance = 20;
 bool ambientLight = true;
 
 Falcon myFalcon;
-
-//GLMmodel* mymodel1;
 
 GLuint texture1;
 GLuint texture2;
@@ -161,6 +159,7 @@ void smoke(){
 		glPopMatrix();
 	}
 }
+
 void explode(){
 	if (difftime(currentTime, explosionStart) > 1){
 		explosionStart = time(NULL);
@@ -241,8 +240,6 @@ double noise(double x,double y) {
 }
 /* perlin noise functions END */
 
-
-
 void keyboard(unsigned char key, int xx, int yy) {
 	glutPostRedisplay();
 	switch(key) {
@@ -283,7 +280,6 @@ void keyboard(unsigned char key, int xx, int yy) {
 	}
 }
 
-
 void processSpecialKeys(int key, int xx, int yy) {
 
 	float fraction = 0.1f;
@@ -318,9 +314,6 @@ void processSpecialKeys(int key, int xx, int yy) {
 	}
 }
 
-
-
-
 void mouseMove(int x, int y)
 {
 	if (isDragging) { // only when dragging
@@ -334,6 +327,7 @@ void mouseMove(int x, int y)
 
 	}
 }
+
 void mouseButton(int button, int state, int x, int y)
 {
 	if (button == GLUT_RIGHT_BUTTON) {
@@ -412,12 +406,6 @@ void fog(){
 		glDisable(GL_FOG);
 }
 
-
-///* spotlight functions: */
-//void createSpotLight(float positionX, float positionY, float positionZ){
-//	
-//}
-
 void spotlight() {
 	//Select position of light and material characteristics
 	GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1.0};
@@ -437,12 +425,6 @@ void spotlight() {
 	glEnable(GL_DEPTH_TEST);
 }
 /* spotlight functions: */
-
-void createRedLight(float positionX, float positionY, float positionZ){
-
-}
-
-
 
 bool detectCollision(){
 	int x = (int)(myFalcon.pos_x + 44.5);
@@ -464,15 +446,7 @@ bool detectCollision(){
 
 void terrain(){
 
-
-
-	//int MAP_SIZE = 88; // now a global
-	//int MAP_SIZE = 10;
-
 	// get a noise map for each translation of the terrain:
-	//int height[88][88];
-	//int terrainTranslationConstant_X = 94; // now made global vars
-	//int terrainTranslationConstant_Z = 44;
 	double getnoise =0;
 
 	// params:
@@ -483,11 +457,8 @@ void terrain(){
 
 	// movement:
 	int speed = 1; // num of new rows of terrain vertices to create per frame
-	//if(frameCounter > 1) {
 	terrainTranslationConstant_Z -= speed; // this was incremented with o and p keys before, now the ship moves forward automatically.
-	//frameCounter = 0;
-	//}
-	//frameCounter++;
+	
 
 	// handle ship roll rotation:
 	float rotSpeed = 1.0f;
@@ -501,11 +472,11 @@ void terrain(){
 		// rotate ship:
 		if(myFalcon.roll < maxRotation) 
 			myFalcon.roll += rotSpeed;
-		//rotX += 1.0;
+		
 	} 
 	else {
 		if(myFalcon.roll <= 0) {
-			//myFalcon.roll = 0;
+			
 		}
 		else {
 			myFalcon.roll -= rotSpeed;
@@ -521,12 +492,12 @@ void terrain(){
 		// rotate ship:
 		if(myFalcon.roll > -maxRotation) 
 			myFalcon.roll -= rotSpeed;
-		//rotX += 1.0;
+		
 
 	} 
 	else {
 		if(myFalcon.roll >= 0) {
-			//myFalcon.roll = 0;
+			
 		}
 		else {
 			myFalcon.roll += rotSpeed;
@@ -563,7 +534,6 @@ void terrain(){
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
 	glColor3f(0.2f, 0.2f, 1.0f);
 	glTranslatef(-44.0f,-2.0f,-44.0f);
-	//glTranslatef(-64.0f,-2.0f,-44.0f);
 	for (int x = 1; x < MAP_SIZE-1; x++) { 
 		for (int z = 1; z < MAP_SIZE-1; z++) {
 			glEnable(GL_TEXTURE_2D);
@@ -590,24 +560,14 @@ void terrain(){
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			glBegin(GL_QUADS);
 
-			//glColor3f(1.0f, 1.0f, 1.0f);
 			glColor3f(0.5f, 0.5f, 0.5f);
-			//glutSolidCube(height[x][z]);
 
 			//draw vertices:
-			//// place some pilars on the landscape:
-			////if(x % 20 == 0) {
-			if(height[x+1][z] > 3.95f) {// && z % 20 == 0) {	// we never get landscape above 4.0f with current params	
+			if(height[x+1][z] > 3.95f) {	// we never get landscape above 4.0f with current params	
 
-				//glPushMatrix();
 				glBindTexture(GL_TEXTURE_2D, texture7);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-				//glTranslatef(x,height[x][z],z);
-				//glScalef(1.0f, 10.0f, 1.0f);
-				//glTexCoord2f(0.0f, 0.0f);glTexCoord2f(1.0f, 0.0f);glTexCoord2f(0.0f, 1.0f);glTexCoord2f(1.0f, 1.0f);
-				//glutSolidCube(1);
 
 				// draw vertices:
 				glTexCoord2f(0.0f, 0.0f); glVertex3f(x,height[x][z]+10, z); // add 10 for the pillar height
@@ -618,10 +578,8 @@ void terrain(){
 				glEnd();
 
 
-				//glPopMatrix();
 				pilarsAreDrawn = 10;
 				// this is a boolean for collision detection of pillars: is the ship above a pillar?
-				//if (x==(int)myFalcon.pos_x+1.0f && z==(int)myFalcon.pos_z+1.0f) { // if we're at the origin:
 				if ((x-44)>=(int)myFalcon.pos_x-1.0f && (x-44)<=(int)myFalcon.pos_x+1.0f && (z-44)>=(int)myFalcon.pos_z-1.0f && (z-44)<=(int)myFalcon.pos_z+1.0f) { // if we're at the origin:
 					originHasPillar = true;
 					pillarHeight = 10;
@@ -640,7 +598,6 @@ void terrain(){
 				glEnd();
 
 
-				//if (x==(int)myFalcon.pos_x+1.0f && z==(int)myFalcon.pos_z+1.0f) {
 				if ((x-44)>=(int)myFalcon.pos_x-1.0f && (x-44)<=(int)myFalcon.pos_x+1.0f && (z-44)>=(int)myFalcon.pos_z-1.0f && (z-44)<=(int)myFalcon.pos_z+1.0f) { // if we're at the origin:
 					// if we're at the origin, but we're not over a pillar:
 					originHasPillar = false;
@@ -657,9 +614,6 @@ void terrain(){
 
 void updateCamera() {
 
-	//glLoadIdentity();
-	//glPushMatrix();
-
 	//look at Millenium falcon at all times
 	float lookX = myFalcon.pos_x;
 	float lookY = myFalcon.pos_y;
@@ -674,7 +628,6 @@ void updateCamera() {
 	eyeZ = -(myFalcon.pos_z + myFalcon.forwardZ * -distance); // minus important so we are behind the ship.
 
 	// Reset transformations
-	//glLoadIdentity();
 
 	// Set the camera
 	if(isfirstPerson) {
@@ -698,32 +651,17 @@ void updateCamera() {
 			0.0f, 1.0f,  0.0f);
 
 
-		// RED LIGHT:
-		//glPushMatrix();
 	}
-	//glPopMatrix();
 }
 
 void renderScene(void) {
-
-
-
 
 	glLoadIdentity();
 
 	// draw falcon:
 	glEnable(GL_TEXTURE_2D);
 
-
 	updateCamera();
-
-
-
-
-
-
-
-
 
 	if(isInWireFrameMode) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -731,20 +669,14 @@ void renderScene(void) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
-	//spotlight();
-
-
-
 	// SPOTLIGHT 
 	glPushMatrix();
-	//createSpotLight(0,0,0);
 	if(true) {//light0_isEnabled
 		glEnable(GL_LIGHT0); //enable the light
 	} else {
 		glDisable(GL_LIGHT0);
 	}
 	// set last term to 0 for a spotlight (see chp 5 in ogl prog guide) 
-	//GLfloat lightpos_blueLight[] = {myFalcon.pos_x+2.0f, myFalcon.pos_y + 10.0f, myFalcon.pos_z+2.0f, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
 	GLfloat lightpos_blueLight[] = {2.0f, 10.0f, 2.0f, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
 	glLightfv(GL_LIGHT0,GL_POSITION, lightpos_blueLight); 
 
@@ -776,9 +708,6 @@ void renderScene(void) {
 		Smoke = false;
 	}
 
-
-
-
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -786,8 +715,6 @@ void renderScene(void) {
 
 	//Display Fog
 	fog();
-
-
 
 	//motion blur
 	motionBlur();
@@ -801,7 +728,6 @@ void renderScene(void) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	myFalcon.draw();
 	glDisable(GL_TEXTURE_2D);
-
 
 	currentTime = time(NULL);
 	double seconds = difftime(currentTime, explosionStart);
@@ -906,7 +832,6 @@ void init(int argc, char **argv)
 	image = loadBMP("explosion.bmp");
 	texture9 = loadTexture(image);
 
-
 	glBindTexture(GL_TEXTURE_2D, texture9);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -927,7 +852,6 @@ int main(int argc, char **argv) {
 	glutSpecialFunc(processSpecialKeys);
 	glutIdleFunc(renderScene);
 	glutReshapeFunc(changeSize);
-
 
 	glutMouseFunc(mouseButton); // process mouse button push/release
 	glutMotionFunc(mouseMove); // process mouse dragging motion
