@@ -69,7 +69,7 @@ bool sand = false;
 float angleExplosion = 0;
 int pilarsAreDrawn;
 bool originHasPillar = false;
-int pillarHeight = 100;
+int pillarHeight = 10;
 
 
 // textures:
@@ -591,37 +591,56 @@ void terrain(){
 			//glutSolidCube(height[x][z]);
 
 			//draw vertices:
-
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(x,height[x][z],z);
-			glTexCoord2f(1.0f, 0.0f); glVertex3f(x+1,height[x+1][z],z);
-			glTexCoord2f(0.0f, 1.0f); glVertex3f(x+1,height[x+1][z+1],z + 1);
-			glTexCoord2f(1.0f, 1.0f); glVertex3f(x,height[x][z+1],z+1);
-			glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-			glEnd();
-
 			//// place some pilars on the landscape:
 			////if(x % 20 == 0) {
 			if(height[x+1][z] > 3.95f) {// && z % 20 == 0) {	// we never get landscape above 4.0f with current params	
-				glPushMatrix();
+				
+				//glPushMatrix();
 				glBindTexture(GL_TEXTURE_2D, texture7);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-				glTranslatef(x,height[x][z],z);
-				glScalef(1.0f, 10.0f, 1.0f);
-				glTexCoord2f(0.0f, 0.0f);glTexCoord2f(1.0f, 0.0f);glTexCoord2f(0.0f, 1.0f);glTexCoord2f(1.0f, 1.0f);
-				glutSolidCube(1);
-				glPopMatrix();
+
+				//glTranslatef(x,height[x][z],z);
+				//glScalef(1.0f, 10.0f, 1.0f);
+				//glTexCoord2f(0.0f, 0.0f);glTexCoord2f(1.0f, 0.0f);glTexCoord2f(0.0f, 1.0f);glTexCoord2f(1.0f, 1.0f);
+				//glutSolidCube(1);
+
+				// draw vertices:
+				glTexCoord2f(0.0f, 0.0f); glVertex3f(x,height[x][z]+10, z); // add 10 for the pillar height
+				glTexCoord2f(1.0f, 0.0f); glVertex3f(x+1,height[x+1][z], z);
+				glTexCoord2f(0.0f, 1.0f); glVertex3f(x+1,height[x+1][z+1], z + 1);
+				glTexCoord2f(1.0f, 1.0f); glVertex3f(x,height[x][z+1]+10, z+1);
+				glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+				glEnd();
+
+
+				//glPopMatrix();
 				pilarsAreDrawn = 10;
 				// this is a boolean for collision detection of pillars: is the ship above a pillar?
-				if (x==(int)myFalcon.pos_x && z==(int)myFalcon.pos_z) { // if we're at the origin:
+				//if (x==(int)myFalcon.pos_x+1.0f && z==(int)myFalcon.pos_z+1.0f) { // if we're at the origin:
+				if ((x-44)>=(int)myFalcon.pos_x-1.0f && (x-44)<=(int)myFalcon.pos_x+1.0f && (z-44)>=(int)myFalcon.pos_z-1.0f && (z-44)<=(int)myFalcon.pos_z+1.0f) { // if we're at the origin:
 					originHasPillar = true;
-					pillarHeight = 10.0f;
+					pillarHeight = 10;
+					std::cout << " pilar collision ";
 				} 
 			} 
 			// is the ship NOT above a pillar?
-			else if (x==(int)myFalcon.pos_x && z==(int)myFalcon.pos_z) {
-				// if we're at the origin, but we're not over a pillar:
-				originHasPillar = false;
+			else {
+
+				// draw vertices: normal way
+				glTexCoord2f(0.0f, 0.0f); glVertex3f(x,height[x][z],z);
+				glTexCoord2f(1.0f, 0.0f); glVertex3f(x+1,height[x+1][z],z);
+				glTexCoord2f(0.0f, 1.0f); glVertex3f(x+1,height[x+1][z+1],z + 1);
+				glTexCoord2f(1.0f, 1.0f); glVertex3f(x,height[x][z+1],z+1);
+				glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+				glEnd();
+
+
+				//if (x==(int)myFalcon.pos_x+1.0f && z==(int)myFalcon.pos_z+1.0f) {
+				if ((x-44)>=(int)myFalcon.pos_x-1.0f && (x-44)<=(int)myFalcon.pos_x+1.0f && (z-44)>=(int)myFalcon.pos_z-1.0f && (z-44)<=(int)myFalcon.pos_z+1.0f) { // if we're at the origin:
+					// if we're at the origin, but we're not over a pillar:
+					originHasPillar = false;
+				}
 			}
 
 		}
