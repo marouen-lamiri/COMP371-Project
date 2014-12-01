@@ -401,21 +401,15 @@ void fog(){
 
 void createSpotLight(float positionX, float positionY, float positionZ)
 {
-	//GLfloat specular[] = {1.0, 1.0, 1.0, 1.0};
-	//GLfloat shininess[] = {50.0};
+
 	GLfloat position[] = {0, 0, 5.0f, 1.0};
 	GLfloat color[4] = { 1.0f, 1.0f, 1.0f, 1.0f};
-	//GLfloat diffuse[] = {1.0, 1.0, 1.0, 1.0};
-	//glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
-
 	GLfloat diffuse_blueLight[] = {1,1,1,1}; 
 	GLfloat ambient_blueLight[] = {1,1,1,1}; //{.5,0,0,1}; 
 	GLfloat specular_blueLight[] = {1,1,1,1}; 
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse_blueLight); 
 	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient_blueLight); 
 	glLightfv(GL_LIGHT0, GL_SPECULAR, specular_blueLight); 
-
-	//glLightfv(GL_LIGHT1,GL_SPECULAR,specular);//GL_LIGHT0
 	glLightfv(GL_LIGHT1,GL_POSITION,position);
 	glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,50.0f);
 	glLightf(GL_LIGHT1,GL_SPOT_EXPONENT,2.0f);
@@ -447,24 +441,15 @@ void createSpotlight2Above() {
 }
 
 void createDirectionalLight() {
-	//GLfloat specular[] = {1.0, 1.0, 1.0, 1.0};
-	//GLfloat shininess[] = {50.0};
 	GLfloat position[] = {0, 0, 5.0f, 0.0f};
 	GLfloat color[4] = { 1.0f, 1.0f, 1.0f, 1.0f};
-	//GLfloat diffuse[] = {1.0, 1.0, 1.0, 1.0};
-	//glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
-
 	GLfloat diffuse_blueLight[] = {1,1,1,1}; 
 	GLfloat ambient_blueLight[] = {1,1,1,1}; //{.5,0,0,1}; 
 	GLfloat specular_blueLight[] = {1,1,1,1}; 
 	glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuse_blueLight); 
 	glLightfv(GL_LIGHT2, GL_AMBIENT, ambient_blueLight); 
 	glLightfv(GL_LIGHT2, GL_SPECULAR, specular_blueLight); 
-
-	//glLightfv(GL_LIGHT1,GL_SPECULAR,specular);//GL_LIGHT0
 	glLightfv(GL_LIGHT2,GL_POSITION,position);
-	//glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,180.0f);
-	//glLightf(GL_LIGHT1,GL_SPOT_EXPONENT,2.0f);
 	glLightfv(GL_LIGHT2, GL_DIFFUSE, color);
 	glEnable(GL_COLOR_MATERIAL);
 	glEnable(GL_DEPTH_TEST);
@@ -484,32 +469,16 @@ void spotlight() {
 	} else {
 		glDisable(GL_LIGHT1);
 	}
-	// set last term to 0 for a spotlight (see chp 5 in ogl prog guide) 
-	//myFalcon.pos_x , myFalcom.pos_y, myFalcon.pos_z;
-	//GLfloat lightpos_blueLight[] = {mymodel1.pos_x+2.0f, 0, mymodel1.pos_z, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
-	//GLfloat lightpos_blueLight[] = {0+12.0f, 0, 0, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
-	//GLfloat lightpos_blueLight[] = {myFalcon.pos_x, myFalcon.pos_y + 10.0f, myFalcon.pos_z, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
 	GLfloat lightpos_blueLight[] = {myFalcon.pos_x, myFalcon.pos_y, myFalcon.pos_z+1.0f, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
 	glLightfv(GL_LIGHT1,GL_POSITION, lightpos_blueLight); 
 
-	//float neg;
-	//if(pilarsAreDrawn > 0) {
-	//	neg = -1.0f;
-	//}
-
 	if(isHighBeamMode){
 		glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,90.0f);
-		//GLfloat directionVector_blueLight[] = {3.0f, -10.0f, 0};
 		GLfloat directionVector_blueLight[] = {myFalcon.pos_x - lightpos_blueLight[0], myFalcon.pos_y - lightpos_blueLight[1], myFalcon.pos_z - lightpos_blueLight[2]};
-		//GLfloat directionVector_blueLight[] = {(myFalcon.pos_x - lightpos_blueLight[0])*neg, myFalcon.pos_y - lightpos_blueLight[1], (myFalcon.pos_z - lightpos_blueLight[2])*neg};
-		//GLfloat directionVector_blueLight[] = {(10.0f), -10.0f, 10.0f};
 		glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, directionVector_blueLight);
 	} else {
 		glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,10.0f);
-		//GLfloat directionVector_blueLight[] = {1.0f, -10.0f, 0};
 		GLfloat directionVector_blueLight[] = {myFalcon.pos_x - lightpos_blueLight[0], myFalcon.pos_y - lightpos_blueLight[1], myFalcon.pos_z - lightpos_blueLight[2]};
-		//GLfloat directionVector_blueLight[] = {(myFalcon.pos_x - lightpos_blueLight[0])*neg, myFalcon.pos_y - lightpos_blueLight[1] - 10.0f, (myFalcon.pos_z - lightpos_blueLight[2])*neg};
-		//GLfloat directionVector_blueLight[] = {(10.0f), - 10.0f, 10.0f};
 		glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, directionVector_blueLight);
 	}
 
@@ -518,19 +487,13 @@ void spotlight() {
 }
 
 void spotlightAbove() {
-
-	//---------------------------
 	
-	// SPOTLIGHT 
-	//glPushMatrix();
-	//createSpotLight(0,0,0);
+	// SPOTLIGHT ABOVE:
 	if(light0_isEnabled) {//light0_isEnabled
 		glEnable(GL_LIGHT0); //enable the light
 	} else {
 		glDisable(GL_LIGHT0);
 	}
-	// set last term to 0 for a spotlight (see chp 5 in ogl prog guide) 
-	//GLfloat lightpos_blueLight[] = {myFalcon.pos_x+2.0f, myFalcon.pos_y + 10.0f, myFalcon.pos_z+2.0f, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
 	GLfloat lightpos_blueLight[] = {2.0f, 10.0f, 2.0f, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
 	glLightfv(GL_LIGHT0,GL_POSITION, lightpos_blueLight); 
 
@@ -540,12 +503,11 @@ void spotlightAbove() {
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse_blueLight); 
 	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient_blueLight); 
 	glLightfv(GL_LIGHT0, GL_SPECULAR, specular_blueLight); 
-
 	glLightf(GL_LIGHT0,GL_SPOT_CUTOFF,180.0f);
 	GLfloat directionVector_blueLight[] = {4.0f, -10.0f, 0};
 	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, directionVector_blueLight);
 
-	//glPopMatrix();// end SPOTLIGHT 
+	// end SPOTLIGHT ABOVE
 
 }
 
@@ -554,38 +516,14 @@ void directionalLight() {
 	//---------------------------
 	
 	// DIRECTiONAL LIGHT: 
-	//glPushMatrix();
-	//createSpotLight(0,0,0);
 	if(light2_isEnabled) {//
 		glEnable(GL_LIGHT2); //enable the light
 	} else {
 		glDisable(GL_LIGHT2);
 	}
-	// set last term to 0 for a spotlight (see chp 5 in ogl prog guide) 
-	//GLfloat lightpos_blueLight[] = {myFalcon.pos_x+2.0f, myFalcon.pos_y + 10.0f, myFalcon.pos_z+2.0f, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
-	//GLfloat lightpos_blueLight[] = {2.0f, 10.0f, 2.0f, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
-	//glLightfv(GL_LIGHT0,GL_POSITION, lightpos_blueLight); 
-
-	//GLfloat diffuse_blueLight[] = {1,1,1,1}; 
-	//GLfloat ambient_blueLight[] = {1,1,1,1}; //{.5,0,0,1}; 
-	//GLfloat specular_blueLight[] = {1,1,1,1}; 
-	//glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse_blueLight); 
-	//glLightfv(GL_LIGHT0, GL_AMBIENT, ambient_blueLight); 
-	//glLightfv(GL_LIGHT0, GL_SPECULAR, specular_blueLight); 
-
-	////glLightf(GL_LIGHT0,GL_SPOT_CUTOFF,180.0f);
-	//GLfloat directionVector_blueLight[] = {4.0f, -10.0f, 0};
-	//glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, directionVector_blueLight);
-
-	//glPopMatrix();// end SPOTLIGHT 
-
 }
-
 /* end the 3 lights functions: */
 
-void createRedLight(float positionX, float positionY, float positionZ){
-
-}
 
 
 
@@ -609,13 +547,10 @@ bool detectCollision(){
 
 void terrain(){
 
-
-
 	//int MAP_SIZE = 88; // now a global
 	//int MAP_SIZE = 10;
 
 	// get a noise map for each translation of the terrain:
-	//int height[88][88];
 	//int terrainTranslationConstant_X = 94; // now made global vars
 	//int terrainTranslationConstant_Z = 44;
 	double getnoise =0;
@@ -628,11 +563,7 @@ void terrain(){
 
 	// movement:
 	int speed = 1; // num of new rows of terrain vertices to create per frame
-	//if(frameCounter > 1) {
 	terrainTranslationConstant_Z -= speed; // this was incremented with o and p keys before, now the ship moves forward automatically.
-	//frameCounter = 0;
-	//}
-	//frameCounter++;
 
 	// handle ship roll rotation:
 	float rotSpeed = 1.0f;
@@ -741,7 +672,6 @@ void terrain(){
 
 			//draw vertices:
 			//// place some pilars on the landscape:
-			////if(x % 20 == 0) {
 			if(height[x+1][z] > 3.95f) {// && z % 20 == 0) {	// we never get landscape above 4.0f with current params	
 
 				//glPushMatrix();
@@ -752,13 +682,13 @@ void terrain(){
 				//glTranslatef(x,height[x][z],z);
 				//glScalef(1.0f, 10.0f, 1.0f);
 				//glTexCoord2f(0.0f, 0.0f);glTexCoord2f(1.0f, 0.0f);glTexCoord2f(0.0f, 1.0f);glTexCoord2f(1.0f, 1.0f);
-				//glutSolidCube(1);
+				//glutSolidCube(1); // this is to draw pilars with glut cubes instead.
 
 				// draw vertices:
 				glTexCoord2f(0.0f, 0.0f); glVertex3f(x,height[x][z]+10, z); // add 10 for the pillar height
-				glTexCoord2f(1.0f, 0.0f); glVertex3f(x+1,height[x+1][z]+10, z);
-				glTexCoord2f(0.0f, 1.0f); glVertex3f(x+1,height[x+1][z+1]+10, z + 1);
-				glTexCoord2f(1.0f, 1.0f); glVertex3f(x,height[x][z+1]+10, z+1);
+				glTexCoord2f(1.0f, 0.0f); glVertex3f(x+1,height[x+1][z], z);
+				glTexCoord2f(0.0f, 1.0f); glVertex3f(x+1,height[x+1][z+1], z + 1);
+				glTexCoord2f(1.0f, 1.0f); glVertex3f(x,height[x][z+1], z+1);
 				glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 				glEnd();
 
@@ -766,7 +696,6 @@ void terrain(){
 				//glPopMatrix();
 				pilarsAreDrawn = 10;
 				// this is a boolean for collision detection of pillars: is the ship above a pillar?
-				//if (x==(int)myFalcon.pos_x+1.0f && z==(int)myFalcon.pos_z+1.0f) { // if we're at the origin:
 				if ((x-44)>=(int)myFalcon.pos_x-1.0f && (x-44)<=(int)myFalcon.pos_x+1.0f && (z-44)>=(int)myFalcon.pos_z-1.0f && (z-44)<=(int)myFalcon.pos_z+1.0f) { // if we're at the origin:
 					originHasPillar = true;
 					pillarHeight = 10;
@@ -802,9 +731,6 @@ void terrain(){
 
 void updateCamera() {
 
-	//glLoadIdentity();
-	//glPushMatrix();
-
 	//look at Millenium falcon at all times
 	float lookX = myFalcon.pos_x;
 	float lookY = myFalcon.pos_y;
@@ -817,9 +743,6 @@ void updateCamera() {
 	eyeX = (myFalcon.pos_x + myFalcon.forwardX * -distance);
 	eyeY = (myFalcon.pos_y + myFalcon.forwardY * -distance) + 1.0f;
 	eyeZ = -(myFalcon.pos_z + myFalcon.forwardZ * -distance); // minus important so we are behind the ship.
-
-	// Reset transformations
-	//glLoadIdentity();
 
 	// Set the camera
 	if(isfirstPerson) {
@@ -835,40 +758,20 @@ void updateCamera() {
 		float lz = eyeZ + 40.0f;
 		gluLookAt(	
 			lx, ly, lz, //1.0f for ly before in example
-			//eyeX, eyeY + 10.0f, eyeZ,
-
-			//0,0,0,
 			lookX, lookY, lookZ,
-			//x+lx, 1.0f,  z+lz,
 			0.0f, 1.0f,  0.0f);
 
-
-		// RED LIGHT:
-		//glPushMatrix();
 	}
-	//glPopMatrix();
 }
 
 void renderScene(void) {
-
-
-
 
 	glLoadIdentity();
 
 	// draw falcon:
 	glEnable(GL_TEXTURE_2D);
 
-
 	updateCamera();
-
-
-
-
-
-
-
-
 
 	if(isInWireFrameMode) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -876,19 +779,13 @@ void renderScene(void) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
-
 	// update lights:
 	spotlight();
 	spotlightAbove();
 	directionalLight();
 
-
-
-
-
 	// collision detection
 	if (detectCollision()){
-
 		Smoke = true;
 		explode();
 		std::cout << "collision Detected";
@@ -897,7 +794,6 @@ void renderScene(void) {
 		Smoke = false;
 	}
 
-
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -905,8 +801,6 @@ void renderScene(void) {
 
 	//Display Fog
 	fog();
-
-
 
 	//motion blur
 	motionBlur();
@@ -920,7 +814,6 @@ void renderScene(void) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	myFalcon.draw();
 	glDisable(GL_TEXTURE_2D);
-
 
 	currentTime = time(NULL);
 	double seconds = difftime(currentTime, explosionStart);
