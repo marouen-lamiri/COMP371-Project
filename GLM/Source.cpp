@@ -58,6 +58,9 @@ int terrainTranslationConstant_Z = 44;
 
 bool isInWireFrameMode = false;
 bool isfirstPerson = true;
+bool light0_isEnabled = true;
+bool light1_isEnabled = true;//true;
+bool light2_isEnabled = true;
 bool isHighBeamMode = true;
 int frameCounter = 0;
 int isRotatingLeft;
@@ -112,25 +115,6 @@ static GLfloat colors[12][3] =               // Rainbow Of Colors
 // ----------------------------------- functions -------------------------------------------------
 
 
-void createSpotLight(float positionX, float positionY, float positionZ)
-{
-	GLfloat specular[] = {1.0, 1.0, 1.0, 1.0};
-	GLfloat shininess[] = {50.0};
-	GLfloat position[] = {0, 0, 5.0f, 1.0};
-	GLfloat color[4] = { 0.0f, 1.0f, 1.0f, 1.0f};
-	GLfloat diffuse[] = {1.0, 1.0, 1.0, 1.0};
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
-
-	glLightfv(GL_LIGHT0,GL_SPECULAR,specular);//GL_LIGHT0
-	glLightfv(GL_LIGHT0,GL_POSITION,position);
-	glLightf(GL_LIGHT0,GL_SPOT_CUTOFF,50.0f);
-	glLightf(GL_LIGHT0,GL_SPOT_EXPONENT,2.0f);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, color);
-	glEnable(GL_COLOR_MATERIAL);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_LIGHT0);
-	glEnable(GL_LIGHTING);
-}
 
 void smoke(){
 	if(Smoke){
@@ -145,7 +129,7 @@ void smoke(){
 		GLfloat mat_shininess[] = {50.0f};
 		glShadeModel (GL_SMOOTH);
 		glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-		GLfloat mat_diffuse[] = {0.961, 0.961, 0.961, 1.0f};
+		GLfloat mat_diffuse[] = {0.961f, 0.961f, 0.961f, 1.0f};
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
 		for(float i = 0; i < 30; i+=0.01){
 			glColor3f(1.0,0.0,0.0);
@@ -290,15 +274,14 @@ void processSpecialKeys(int key, int xx, int yy) {
 
 	switch (key) {
 	case GLUT_KEY_F1:
-
+		light0_isEnabled = ! light0_isEnabled;
 		break;
 	case GLUT_KEY_F2:
-
+		light1_isEnabled = ! light1_isEnabled;
 		break;
 	case GLUT_KEY_F3:
-
+		light2_isEnabled = ! light2_isEnabled;
 		break;
-
 	case GLUT_KEY_LEFT :
 		isRotatingLeft = 5;
 		break;
@@ -414,29 +397,191 @@ void fog(){
 
 
 ///* spotlight functions: */
-//void createSpotLight(float positionX, float positionY, float positionZ){
-//	
-//}
 
-void spotlight() {
+
+void createSpotLight(float positionX, float positionY, float positionZ)
+{
+	//GLfloat specular[] = {1.0, 1.0, 1.0, 1.0};
+	//GLfloat shininess[] = {50.0};
+	GLfloat position[] = {0, 0, 5.0f, 1.0};
+	GLfloat color[4] = { 1.0f, 1.0f, 1.0f, 1.0f};
+	//GLfloat diffuse[] = {1.0, 1.0, 1.0, 1.0};
+	//glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
+
+	GLfloat diffuse_blueLight[] = {1,1,1,1}; 
+	GLfloat ambient_blueLight[] = {1,1,1,1}; //{.5,0,0,1}; 
+	GLfloat specular_blueLight[] = {1,1,1,1}; 
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse_blueLight); 
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient_blueLight); 
+	glLightfv(GL_LIGHT0, GL_SPECULAR, specular_blueLight); 
+
+	//glLightfv(GL_LIGHT1,GL_SPECULAR,specular);//GL_LIGHT0
+	glLightfv(GL_LIGHT1,GL_POSITION,position);
+	glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,50.0f);
+	glLightf(GL_LIGHT1,GL_SPOT_EXPONENT,2.0f);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, color);
+	glEnable(GL_COLOR_MATERIAL);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_LIGHT1);
+	glEnable(GL_LIGHTING);
+}
+
+void createSpotlight2Above() {
 	//Select position of light and material characteristics
 	GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1.0};
 	GLfloat mat_shininess[] = {50.0};
-	GLfloat light_position[] = {myFalcon.pos_x,myFalcon.pos_y, myFalcon.pos_z,1.0};
+	GLfloat light_position[] = {myFalcon.pos_x,myFalcon.pos_y + 10.0f, myFalcon.pos_z,1.0};
 	GLfloat spotDir[] = {2.0 + myFalcon.pos_x,myFalcon.pos_y,1.0 + myFalcon.pos_z};
 	GLfloat color[4] = { 0.0f, 1.0f, 1.0f, 1.0f};
 	glShadeModel (GL_SMOOTH);
-	glLightfv(GL_LIGHT0,GL_SPECULAR,mat_specular);
-	glLightfv(GL_LIGHT0,GL_POSITION,light_position);
+	glLightfv(GL_LIGHT1,GL_SPECULAR,mat_specular);
+	glLightfv(GL_LIGHT1,GL_POSITION,light_position);
 	// Definig spotlight attributes
-	glLightf(GL_LIGHT0,GL_SPOT_CUTOFF,45);
-	glLightf(GL_LIGHT0,GL_SPOT_EXPONENT,2.0f);
-	glLightfv(GL_LIGHT0,GL_SPOT_DIRECTION,spotDir);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, color);
+	glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,45);
+	glLightf(GL_LIGHT1,GL_SPOT_EXPONENT,2.0f);
+	glLightfv(GL_LIGHT1,GL_SPOT_DIRECTION,spotDir);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, color);
 	glEnable(GL_COLOR_MATERIAL);
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_LIGHTING);
 }
-/* spotlight functions: */
+
+void createDirectionalLight() {
+	//GLfloat specular[] = {1.0, 1.0, 1.0, 1.0};
+	//GLfloat shininess[] = {50.0};
+	GLfloat position[] = {0, 0, 5.0f, 0.0f};
+	GLfloat color[4] = { 1.0f, 1.0f, 1.0f, 1.0f};
+	//GLfloat diffuse[] = {1.0, 1.0, 1.0, 1.0};
+	//glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
+
+	GLfloat diffuse_blueLight[] = {1,1,1,1}; 
+	GLfloat ambient_blueLight[] = {1,1,1,1}; //{.5,0,0,1}; 
+	GLfloat specular_blueLight[] = {1,1,1,1}; 
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse_blueLight); 
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient_blueLight); 
+	glLightfv(GL_LIGHT0, GL_SPECULAR, specular_blueLight); 
+
+	//glLightfv(GL_LIGHT1,GL_SPECULAR,specular);//GL_LIGHT0
+	glLightfv(GL_LIGHT1,GL_POSITION,position);
+	//glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,180.0f);
+	//glLightf(GL_LIGHT1,GL_SPOT_EXPONENT,2.0f);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, color);
+	glEnable(GL_COLOR_MATERIAL);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_LIGHT2);
+	glEnable(GL_LIGHTING);
+}
+
+
+void spotlight() {
+
+	// SPOTLIGHT 
+
+	glPushMatrix();
+
+	if(light1_isEnabled) {
+		glEnable(GL_LIGHT1); //enable the light
+	} else {
+		glDisable(GL_LIGHT1);
+	}
+	// set last term to 0 for a spotlight (see chp 5 in ogl prog guide) 
+	//myFalcon.pos_x , myFalcom.pos_y, myFalcon.pos_z;
+	//GLfloat lightpos_blueLight[] = {mymodel1.pos_x+2.0f, 0, mymodel1.pos_z, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
+	//GLfloat lightpos_blueLight[] = {0+12.0f, 0, 0, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
+	//GLfloat lightpos_blueLight[] = {myFalcon.pos_x, myFalcon.pos_y + 10.0f, myFalcon.pos_z, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
+	GLfloat lightpos_blueLight[] = {myFalcon.pos_x, myFalcon.pos_y, myFalcon.pos_z+1.0f, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
+	glLightfv(GL_LIGHT1,GL_POSITION, lightpos_blueLight); 
+
+	//float neg;
+	//if(pilarsAreDrawn > 0) {
+	//	neg = -1.0f;
+	//}
+
+	if(isHighBeamMode){
+		glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,90.0f);
+		//GLfloat directionVector_blueLight[] = {3.0f, -10.0f, 0};
+		GLfloat directionVector_blueLight[] = {myFalcon.pos_x - lightpos_blueLight[0], myFalcon.pos_y - lightpos_blueLight[1], myFalcon.pos_z - lightpos_blueLight[2]};
+		//GLfloat directionVector_blueLight[] = {(myFalcon.pos_x - lightpos_blueLight[0])*neg, myFalcon.pos_y - lightpos_blueLight[1], (myFalcon.pos_z - lightpos_blueLight[2])*neg};
+		//GLfloat directionVector_blueLight[] = {(10.0f), -10.0f, 10.0f};
+		glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, directionVector_blueLight);
+	} else {
+		glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,10.0f);
+		//GLfloat directionVector_blueLight[] = {1.0f, -10.0f, 0};
+		GLfloat directionVector_blueLight[] = {myFalcon.pos_x - lightpos_blueLight[0], myFalcon.pos_y - lightpos_blueLight[1], myFalcon.pos_z - lightpos_blueLight[2]};
+		//GLfloat directionVector_blueLight[] = {(myFalcon.pos_x - lightpos_blueLight[0])*neg, myFalcon.pos_y - lightpos_blueLight[1] - 10.0f, (myFalcon.pos_z - lightpos_blueLight[2])*neg};
+		//GLfloat directionVector_blueLight[] = {(10.0f), - 10.0f, 10.0f};
+		glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, directionVector_blueLight);
+	}
+
+	glPopMatrix();
+
+}
+
+void spotlightAbove() {
+
+	//---------------------------
+	
+	// SPOTLIGHT 
+	glPushMatrix();
+	//createSpotLight(0,0,0);
+	if(light0_isEnabled) {//light0_isEnabled
+		glEnable(GL_LIGHT0); //enable the light
+	} else {
+		glDisable(GL_LIGHT0);
+	}
+	// set last term to 0 for a spotlight (see chp 5 in ogl prog guide) 
+	//GLfloat lightpos_blueLight[] = {myFalcon.pos_x+2.0f, myFalcon.pos_y + 10.0f, myFalcon.pos_z+2.0f, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
+	GLfloat lightpos_blueLight[] = {2.0f, 10.0f, 2.0f, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
+	glLightfv(GL_LIGHT0,GL_POSITION, lightpos_blueLight); 
+
+	GLfloat diffuse_blueLight[] = {1,1,1,1}; 
+	GLfloat ambient_blueLight[] = {1,1,1,1}; //{.5,0,0,1}; 
+	GLfloat specular_blueLight[] = {1,1,1,1}; 
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse_blueLight); 
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient_blueLight); 
+	glLightfv(GL_LIGHT0, GL_SPECULAR, specular_blueLight); 
+
+	glLightf(GL_LIGHT0,GL_SPOT_CUTOFF,180.0f);
+	GLfloat directionVector_blueLight[] = {4.0f, -10.0f, 0};
+	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, directionVector_blueLight);
+
+	glPopMatrix();// end SPOTLIGHT 
+
+}
+
+void directionalLight() {
+
+	//---------------------------
+	
+	// DIRECTiONAL LIGHT: 
+	glPushMatrix();
+	//createSpotLight(0,0,0);
+	if(true) {//light2_isEnabled
+		glEnable(GL_LIGHT2); //enable the light
+	} else {
+		glDisable(GL_LIGHT2);
+	}
+	// set last term to 0 for a spotlight (see chp 5 in ogl prog guide) 
+	//GLfloat lightpos_blueLight[] = {myFalcon.pos_x+2.0f, myFalcon.pos_y + 10.0f, myFalcon.pos_z+2.0f, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
+	//GLfloat lightpos_blueLight[] = {2.0f, 10.0f, 2.0f, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
+	//glLightfv(GL_LIGHT0,GL_POSITION, lightpos_blueLight); 
+
+	//GLfloat diffuse_blueLight[] = {1,1,1,1}; 
+	//GLfloat ambient_blueLight[] = {1,1,1,1}; //{.5,0,0,1}; 
+	//GLfloat specular_blueLight[] = {1,1,1,1}; 
+	//glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse_blueLight); 
+	//glLightfv(GL_LIGHT0, GL_AMBIENT, ambient_blueLight); 
+	//glLightfv(GL_LIGHT0, GL_SPECULAR, specular_blueLight); 
+
+	////glLightf(GL_LIGHT0,GL_SPOT_CUTOFF,180.0f);
+	//GLfloat directionVector_blueLight[] = {4.0f, -10.0f, 0};
+	//glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, directionVector_blueLight);
+
+	glPopMatrix();// end SPOTLIGHT 
+
+}
+
+/* end the 3 lights functions: */
 
 void createRedLight(float positionX, float positionY, float positionZ){
 
@@ -611,8 +756,8 @@ void terrain(){
 
 				// draw vertices:
 				glTexCoord2f(0.0f, 0.0f); glVertex3f(x,height[x][z]+10, z); // add 10 for the pillar height
-				glTexCoord2f(1.0f, 0.0f); glVertex3f(x+1,height[x+1][z], z);
-				glTexCoord2f(0.0f, 1.0f); glVertex3f(x+1,height[x+1][z+1], z + 1);
+				glTexCoord2f(1.0f, 0.0f); glVertex3f(x+1,height[x+1][z]+10, z);
+				glTexCoord2f(0.0f, 1.0f); glVertex3f(x+1,height[x+1][z+1]+10, z + 1);
 				glTexCoord2f(1.0f, 1.0f); glVertex3f(x,height[x][z+1]+10, z+1);
 				glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 				glEnd();
@@ -731,41 +876,17 @@ void renderScene(void) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
-	//spotlight();
 
+	// update lights:
+	spotlight();
+	spotlightAbove();
+	directionalLight();
 
-
-	// SPOTLIGHT 
-	glPushMatrix();
-	//createSpotLight(0,0,0);
-	if(true) {//light0_isEnabled
-		glEnable(GL_LIGHT0); //enable the light
-	} else {
-		glDisable(GL_LIGHT0);
-	}
-	// set last term to 0 for a spotlight (see chp 5 in ogl prog guide) 
-	//GLfloat lightpos_blueLight[] = {myFalcon.pos_x+2.0f, myFalcon.pos_y + 10.0f, myFalcon.pos_z+2.0f, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
-	GLfloat lightpos_blueLight[] = {2.0f, 10.0f, 2.0f, 1.0f};//1.0 //  {18.0f,0,0,1.0f};
-	glLightfv(GL_LIGHT0,GL_POSITION, lightpos_blueLight); 
-
-	GLfloat diffuse_blueLight[] = {1,1,1,1}; 
-	GLfloat ambient_blueLight[] = {1,1,1,1}; //{.5,0,0,1}; 
-	GLfloat specular_blueLight[] = {1,1,1,1}; 
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse_blueLight); 
-	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient_blueLight); 
-	glLightfv(GL_LIGHT0, GL_SPECULAR, specular_blueLight); 
-
-	glLightf(GL_LIGHT0,GL_SPOT_CUTOFF,180.0f);
-	GLfloat directionVector_blueLight[] = {4.0f, -10.0f, 0};
-	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, directionVector_blueLight);
-
-	glPopMatrix();// end SPOTLIGHT 
 
 
 
 
 	// collision detection
-
 	if (detectCollision()){
 
 		Smoke = true;
@@ -775,8 +896,6 @@ void renderScene(void) {
 	else{
 		Smoke = false;
 	}
-
-
 
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -914,6 +1033,10 @@ void init(int argc, char **argv)
 	delete image;
 
 	createSpotLight(0,0,0);
+	createSpotlight2Above();
+	createDirectionalLight();
+
+	glEnable(GL_LIGHTING);
 
 }
 
