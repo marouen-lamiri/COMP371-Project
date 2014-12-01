@@ -457,15 +457,15 @@ void createDirectionalLight() {
 	GLfloat diffuse_blueLight[] = {1,1,1,1}; 
 	GLfloat ambient_blueLight[] = {1,1,1,1}; //{.5,0,0,1}; 
 	GLfloat specular_blueLight[] = {1,1,1,1}; 
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse_blueLight); 
-	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient_blueLight); 
-	glLightfv(GL_LIGHT0, GL_SPECULAR, specular_blueLight); 
+	glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuse_blueLight); 
+	glLightfv(GL_LIGHT2, GL_AMBIENT, ambient_blueLight); 
+	glLightfv(GL_LIGHT2, GL_SPECULAR, specular_blueLight); 
 
 	//glLightfv(GL_LIGHT1,GL_SPECULAR,specular);//GL_LIGHT0
-	glLightfv(GL_LIGHT1,GL_POSITION,position);
+	glLightfv(GL_LIGHT2,GL_POSITION,position);
 	//glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,180.0f);
 	//glLightf(GL_LIGHT1,GL_SPOT_EXPONENT,2.0f);
-	glLightfv(GL_LIGHT1, GL_DIFFUSE, color);
+	glLightfv(GL_LIGHT2, GL_DIFFUSE, color);
 	glEnable(GL_COLOR_MATERIAL);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHT2);
@@ -522,7 +522,7 @@ void spotlightAbove() {
 	//---------------------------
 	
 	// SPOTLIGHT 
-	glPushMatrix();
+	//glPushMatrix();
 	//createSpotLight(0,0,0);
 	if(light0_isEnabled) {//light0_isEnabled
 		glEnable(GL_LIGHT0); //enable the light
@@ -545,7 +545,7 @@ void spotlightAbove() {
 	GLfloat directionVector_blueLight[] = {4.0f, -10.0f, 0};
 	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, directionVector_blueLight);
 
-	glPopMatrix();// end SPOTLIGHT 
+	//glPopMatrix();// end SPOTLIGHT 
 
 }
 
@@ -554,9 +554,9 @@ void directionalLight() {
 	//---------------------------
 	
 	// DIRECTiONAL LIGHT: 
-	glPushMatrix();
+	//glPushMatrix();
 	//createSpotLight(0,0,0);
-	if(true) {//light2_isEnabled
+	if(light2_isEnabled) {//
 		glEnable(GL_LIGHT2); //enable the light
 	} else {
 		glDisable(GL_LIGHT2);
@@ -577,7 +577,7 @@ void directionalLight() {
 	//GLfloat directionVector_blueLight[] = {4.0f, -10.0f, 0};
 	//glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, directionVector_blueLight);
 
-	glPopMatrix();// end SPOTLIGHT 
+	//glPopMatrix();// end SPOTLIGHT 
 
 }
 
